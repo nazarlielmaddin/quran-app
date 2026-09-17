@@ -1,0 +1,114 @@
+{
+ "brand": "Kur'an Ziyaretgahı",
+ "brandSub": "Kur'an Ziyaretgahı",
+ "nav": {
+  "reciters": "Okuyucular",
+  "surahs": "Sureler",
+  "atmosphere": "Atmosfer",
+  "nowPlaying": "Şimdi Okunuyor"
+ },
+ "hero": {
+  "titleA": "Kur'an",
+  "titleB": "Huzur ve Odak",
+  "subtitle": "Okuyucunu seç, atmosferini seç ve huzurla dinle.",
+  "cta": "Dinlemeye Başla",
+  "secondary": "Sureleri Keşfet",
+  "anfalAyah": "Gerçek müminler ancak Allah anıldığında kalpleri titreyen, ayetleri okunduğunda imanları artan ve yalnız Rablerine tevekkül edenlerdir.",
+  "anfalCite": "Enfâl suresi, 8:2",
+  "scroll": "Kaydır"
+ },
+ "reciters": {
+  "title": "Okuyucunu seç",
+  "subtitle": "On usta ses — Haremeyn'den kalbine.",
+  "subtitleCount": "{count} usta ses — seçmek için dokun, dinlemek için oynat düğmesine bas",
+  "listen": "Dinle",
+  "select": "Okuyucu seç"
+ },
+ "surahs": {
+  "title": "Bir sure seç",
+  "subtitle": "Ad veya numarayla ara — İngilizce, transliterasyon veya Azerice.",
+  "searchPlaceholder": "Sure ara... örneğin, Rahman, Yasin, 67",
+  "ayahs": "ayet",
+  "duration": "Süre",
+  "play": "Oynat",
+  "noneFound": "Aramana uygun sure bulunamadı.",
+  "clear": "Temizle",
+  "meccan": "Mekke",
+  "medinan": "Medine"
+ },
+ "atmosphere": {
+  "title": "Atmosferini seç",
+  "subtitle": "Tilavetten bağımsız kalan ortam katmanı.",
+  "nature": "Doğa",
+  "cozy": "Sıcak",
+  "focus": "Odak",
+  "on": "Atmosfer açık",
+  "off": "Atmosfer kapalı",
+  "preview": "Sesi oynat"
+ },
+ "recitation": {
+  "title": "Tilavet",
+  "verse": "Ayet",
+  "show": "Tilaveti göster",
+  "hide": "Tilaveti gizle",
+  "loading": "Transliterasyon yükleniyor…",
+  "unavailable": "Bu sure için transliterasyon yok.",
+  "translationLoading": "Çeviri yükleniyor…",
+  "translationUnavailable": "Bu sure için çeviri yok.",
+  "synced": "Tilavetle senkronize",
+  "tapVerse": "Atlamak için ayete dokun",
+  "bismillahHint": "Besmele — baştan oynatmak için tıkla",
+  "displayModes": {
+   "transliteration": "Transliterasyon",
+   "arabic": "العربية",
+   "both": "Her ikisi"
+  },
+  "styles": {
+   "accurate": "Asıl",
+   "simple": "Sade"
+  }
+ },
+ "player": {
+  "quran": "Kur'an",
+  "ambient": "Ortam",
+  "on": "Açık",
+  "off": "Kapalı",
+  "play": "Oynat",
+  "pause": "Duraklat",
+  "previous": "Önceki sure",
+  "next": "Sonraki sure",
+  "quranVolume": "Kur'an sesi",
+  "ambientVolume": "Ortam sesi",
+  "repeat": "Tekrarla",
+  "autoNext": "Otomatik devam",
+  "resume": "Dinlemeye devam et",
+  "loading": "Yükleniyor…",
+  "none": "Hiçbiri",
+  "seek": "Sar",
+  "loopAmbient": "Ortamı döngüye al",
+  "dismiss": "Kapat"
+ },
+ "repeats": {
+  "off": "Kapalı",
+  "one": "Bir",
+  "all": "Tümü"
+ },
+ "repeatStatus": {
+  "off": "Tekrar kapalı",
+  "one": "Geçerli sureyi tekrarla",
+  "all": "Tüm sureleri tekrarla"
+ },
+ "settings": {
+  "title": "Ayarlar"
+ },
+ "errors": {
+  "audio": "Bu tilavet yüklenemedi. Lütfen tekrar dene veya başka kaynak seç.",
+  "ambient": "Bu ortam sesi yüklenemedi. Lütfen başkasını seç.",
+  "video": "Arka plan videosu yok — atmosfer çalmaya devam ediyor."
+ },
+ "footer": {
+  "madeWith": "Huzurla dinlemen için hazırlandı",
+  "tagline": "Kur'an. Huzur. Odak."
+ },
+ "developedBy": "Hazırlayan"
+}

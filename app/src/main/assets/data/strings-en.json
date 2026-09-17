@@ -1,0 +1,114 @@
+{
+ "brand": "Quran Sanctuary",
+ "brandSub": "Qur'an Sanctuary",
+ "nav": {
+  "reciters": "Reciters",
+  "surahs": "Surahs",
+  "atmosphere": "Atmosphere",
+  "nowPlaying": "Now Playing"
+ },
+ "hero": {
+  "titleA": "Qur'an",
+  "titleB": "Peace and Focus",
+  "subtitle": "Choose your reciter, select your atmosphere, and listen in peace.",
+  "cta": "Start Listening",
+  "secondary": "Explore Surahs",
+  "anfalAyah": "The true believers are only those whose hearts tremble at the remembrance of Allah, whose faith increases when His revelations are recited to them, and who put their trust in their Lord.",
+  "anfalCite": "Surah Al-Anfal, 8:2",
+  "scroll": "Scroll"
+ },
+ "reciters": {
+  "title": "Choose your reciter",
+  "subtitle": "Ten master voices. Echoing from the Haramayn to your heart.",
+  "subtitleCount": "{count} master voices — tap to select, press play to listen",
+  "listen": "Listen",
+  "select": "Choose reciter"
+ },
+ "surahs": {
+  "title": "Choose a surah",
+  "subtitle": "Search by name or number — in English, transliteration, or Azerbaijani.",
+  "searchPlaceholder": "Search surahs… e.g. Ar-Rahman, Yasin, 67",
+  "ayahs": "Ayahs",
+  "duration": "Duration",
+  "play": "Play",
+  "noneFound": "No surahs match your search.",
+  "clear": "Clear",
+  "meccan": "Meccan",
+  "medinan": "Medinan"
+ },
+ "atmosphere": {
+  "title": "Choose your atmosphere",
+  "subtitle": "An ambient layer that stays independent from the recitation.",
+  "nature": "Nature",
+  "cozy": "Cozy",
+  "focus": "Focus",
+  "on": "Ambient on",
+  "off": "Ambient off",
+  "preview": "Play sound"
+ },
+ "recitation": {
+  "title": "Recitation",
+  "verse": "Verse",
+  "show": "Show recitation",
+  "hide": "Hide recitation",
+  "loading": "Loading transliteration…",
+  "unavailable": "Transliteration is unavailable for this surah.",
+  "translationLoading": "Loading translation…",
+  "translationUnavailable": "Translation is unavailable for this surah.",
+  "synced": "Synchronized with recitation",
+  "tapVerse": "Tap a verse to jump",
+  "bismillahHint": "Bismillah — click to play from start",
+  "displayModes": {
+   "transliteration": "Transliteration",
+   "arabic": "العربية",
+   "both": "Both"
+  },
+  "styles": {
+   "accurate": "Accurate",
+   "simple": "Simple"
+  }
+ },
+ "player": {
+  "quran": "Qur'an",
+  "ambient": "Ambience",
+  "on": "On",
+  "off": "Off",
+  "play": "Play",
+  "pause": "Pause",
+  "previous": "Previous surah",
+  "next": "Next surah",
+  "quranVolume": "Qur'an volume",
+  "ambientVolume": "Ambient volume",
+  "repeat": "Repeat",
+  "autoNext": "Auto-next",
+  "resume": "Resume listening",
+  "loading": "Loading…",
+  "none": "None",
+  "seek": "Seek",
+  "loopAmbient": "Loop ambient",
+  "dismiss": "Dismiss"
+ },
+ "repeats": {
+  "off": "Off",
+  "one": "One",
+  "all": "All"
+ },
+ "repeatStatus": {
+  "off": "Repeat off",
+  "one": "Repeat current surah",
+  "all": "Repeat all surahs"
+ },
+ "settings": {
+  "title": "Settings"
+ },
+ "errors": {
+  "audio": "Unable to load this recitation. Please try again or choose another source.",
+  "ambient": "Unable to load this ambient sound. Please choose another.",
+  "video": "Background video unavailable — atmosphere still plays."
+ },
+ "footer": {
+  "madeWith": "Crafted for peaceful listening",
+  "tagline": "Qur'an. Peace. Focus."
+ },
+ "developedBy": "Developed by"
+}

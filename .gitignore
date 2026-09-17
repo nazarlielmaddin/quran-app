@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+**/build/
+out/
+
+# Local configuration
+local.properties
+*.iml
+.idea/
+.DS_Store
+
+# Signing secrets — NEVER commit the release key or its passwords.
+keystore/
+app/keystore.properties
+*.jks
+*.keystore
+
+# Android
+*.apk
+*.aab
+*.ap_
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# Kotlin / misc
+.kotlin/
+.kotlin_module

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ink" />
+    <!-- 12dp uniform inset: the artwork no longer bleeds past the safe zone,
+         so OEM masks (circle/squircle) stop clipping its edges. -->
+    <foreground>
+        <inset
+            android:drawable="@drawable/ic_logo"
+            android:insetLeft="18dp"
+            android:insetTop="18dp"
+            android:insetRight="18dp"
+            android:insetBottom="18dp" />
+    </foreground>
+    <monochrome>
+        <inset
+            android:drawable="@drawable/ic_logo"
+            android:insetLeft="18dp"
+            android:insetTop="18dp"
+            android:insetRight="18dp"
+            android:insetBottom="18dp" />
+    </monochrome>
+</adaptive-icon>
