@@ -12,9 +12,9 @@
   "hasTimestamps": true,
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
-  "provider": "quranicaudio",
-  "audioFolder": "yasser_ad-dussary",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "yasserAlDosari/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "haitham-al-dakhin",
@@ -30,7 +30,7 @@
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
   "provider": "mp3quran",
-  "audioFolder": "h_dukhain/Rewayat-Hafs-A-n-Assem",
+  "audioFolder": "haitham-dukhain/r1",
   "timingSource": null
  },
  {
@@ -46,9 +46,9 @@
   "hasTimestamps": true,
   "origin": "Kuwait",
   "originAz": "Küveyt",
-  "provider": "quranicaudio",
-  "audioFolder": "mishari_al_afasy/murattal",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "alafasy/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "abdul-basit-murattal",
@@ -63,9 +63,9 @@
   "hasTimestamps": true,
   "origin": "Egypt",
   "originAz": "Misir",
-  "provider": "quranicaudio",
-  "audioFolder": "abdul_baset/murattal",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "abdulBasit/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "mahmoud-khalil-al-husary",
@@ -80,9 +80,9 @@
   "hasTimestamps": true,
   "origin": "Egypt",
   "originAz": "Misir",
-  "provider": "quranicaudio",
-  "audioFolder": "khalil_al_husary/murattal",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "husary/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "badr-al-turki",
@@ -97,9 +97,9 @@
   "hasTimestamps": true,
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
-  "provider": "quranicaudio",
-  "audioFolder": "badr_al_turki/mp3",
-  "timingSource": "qdc"
+  "provider": "mp3quran",
+  "audioFolder": "badr-turki/r1",
+  "timingSource": "alignment"
  },
  {
   "id": "abdur-rahman-as-sudais",
@@ -114,9 +114,9 @@
   "hasTimestamps": true,
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
-  "provider": "quranicaudio",
-  "audioFolder": "abdurrahmaan_as_sudais/murattal",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "abdulrahmanAlSudais/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "maher-al-muaiqly",
@@ -131,9 +131,9 @@
   "hasTimestamps": true,
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
-  "provider": "quranicaudio",
-  "audioFolder": "maher_256",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "maherAlMuaiqly/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "saad-al-ghamdi",
@@ -148,9 +148,9 @@
   "hasTimestamps": true,
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
-  "provider": "quranicaudio",
-  "audioFolder": "sa3d_al-ghaamidi/complete",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "ghamadi/murattal",
+  "timingSource": "qul"
  },
  {
   "id": "abu-bakr-al-shatri",
@@ -165,8 +165,8 @@
   "hasTimestamps": true,
   "origin": "Saudi Arabia",
   "originAz": "Səudiyyə Ərəbistanı",
-  "provider": "quranicaudio",
-  "audioFolder": "abu_bakr_shatri/murattal",
-  "timingSource": "qdc"
+  "provider": "qul",
+  "audioFolder": "abuBakrAlShatri/murattal",
+  "timingSource": "qul"
  }
 ]

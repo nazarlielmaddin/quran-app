@@ -164,7 +164,9 @@ data class Recitation(
     val audioUrl: String,
     @Serializable(with = LenientNullableInt::class)
     val durationSeconds: Int? = null,
-    val source: String = ""
+    val source: String = "",
+    /** One-shot mirror when [audioUrl]'s host errors (exact timings only match [audioUrl]). */
+    val fallbackAudioUrl: String? = null
 )
 
 @Serializable

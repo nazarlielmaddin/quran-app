@@ -82,7 +82,11 @@ fun LibraryScreen(vm: AppViewModel, nav: NavController) {
     val (bmLabel, dlLabel, histLabel) = libraryTabLabels(locale)
 
     val bookmarks by container.database.bookmarks().observe().collectAsState(initial = emptyList())
-    val downloads by container.database.downloads().observe().collectAsState(initial = emptyList())
+    val allDownloads by container.database.downloads().observe().collectAsState(initial = emptyList())
+    // Hide stale ledger rows whose file lived in the legacy `audio/` tree.
+    val downloads = allDownloads.filter {
+        container.downloader.isDownloaded(it.key, it.reciterId, it.surahId)
+    }
     val history by container.database.history().observeRecent().collectAsState(initial = emptyList())
 
     SanctuaryScaffold(

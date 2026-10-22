@@ -60,9 +60,10 @@ keyPassword=****
 
 ## 🔗 Data sources
 
-- Recitation audio: `cdn.islamic.network`, `mp3quran.net`
+- Recitation audio: `audio-cdn.tarteel.ai` (Quranic Universal Library, 8 reciters) and `cdn.mp3quran.net` (Badr Al-Turki, Haitham Al-Dakhin)
+- Verse timings: QUL per-ayah segments (8 reciters) and QDC forced alignment (Badr Al-Turki); Haitham has no timings
+- Runtime fallback: `cdn.mp3quran.net` mirrors for QUL reciters, `server8.mp3quran.net` for Badr, `server16.mp3quran.net` for Haitham
 - Transliteration: `api.alquran.cloud` (`en.transliteration`)
-- Verse timings: `everyayah.com` (Yasser Al-Dossari)
 - Ambient audio/video: Pixabay CDN · Portraits: Wikimedia Commons
 
 ## 📄 License

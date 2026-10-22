@@ -1,6 +1,7 @@
 package com.quransanctuary.app.data.download
 
 import android.content.Context
+import com.quransanctuary.app.data.audio.AudioStorage
 import com.quransanctuary.app.data.local.DownloadEntity
 import com.quransanctuary.app.data.local.LibraryDatabase
 import java.io.BufferedInputStream
@@ -51,8 +52,8 @@ class SurahDownloader(
         targetFile(key, reciterId, surahId).let { it.exists() && it.length() > 0 }
 
     fun targetFile(key: String, reciterId: String, surahId: Int): File =
-        if (key.startsWith("ambient:")) File(context.filesDir, "audio/ambient/${key.removePrefix("ambient:")}.mp3")
-        else File(context.filesDir, "audio/$reciterId/$surahId.mp3")
+        if (key.startsWith("ambient:")) File(context.filesDir, "${AudioStorage.AMBIENT_DIR}/${key.removePrefix("ambient:")}.mp3")
+        else File(context.filesDir, "${AudioStorage.QURAN_DIR}/$reciterId/$surahId.mp3")
 
     fun enqueue(key: String, url: String, label: String, reciterId: String = "", surahId: Int = 0) {
         synchronized(jobsLock) {
@@ -150,9 +151,13 @@ class SurahDownloader(
 
     fun downloadsDirSize(): Long {
         return try {
-            val root = File(context.filesDir, "audio")
-            if (!root.exists()) return 0
-            root.walkTopDown().filter { it.isFile && it.extension != "part" }.sumOf { it.length() }
+            // Include the legacy tree so settings shows the real disk usage until
+            // the user clears it (old downloads are intentionally not reused).
+            listOf(File(context.filesDir, AudioStorage.QURAN_DIR), File(context.filesDir, AudioStorage.LEGACY_DIR))
+                .filter { it.exists() }
+                .sumOf { root ->
+                    root.walkTopDown().filter { it.isFile && it.extension != "part" }.sumOf { it.length() }
+                }
         } catch (_: Exception) {
             0L
         }
@@ -165,7 +170,8 @@ class SurahDownloader(
             all.forEach { runCatching { it.cancel() } }
         }
         _active.value = emptyMap()
-        runCatching { File(context.filesDir, "audio").deleteRecursively() }
+        runCatching { File(context.filesDir, AudioStorage.QURAN_DIR).deleteRecursively() }
+        runCatching { File(context.filesDir, AudioStorage.LEGACY_DIR).deleteRecursively() }
         for (d in db.downloads().observe().first()) db.downloads().delete(d.key)
     }
 }

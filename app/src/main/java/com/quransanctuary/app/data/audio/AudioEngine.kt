@@ -8,10 +8,11 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
-import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.quransanctuary.app.data.local.LibraryDatabase
@@ -81,6 +82,11 @@ class AudioEngine(
     private var saveJob: Job? = null
     private var lastPersistedMs = 0L
 
+    /** One-shot mirror for the current surah and a token that invalidates stale timing loads. */
+    private var currentFallbackUri: Uri? = null
+    private var fallbackTried = false
+    private var quranLoadToken = 0
+
     /** Starts the foreground audio service so playback survives backgrounding. */
     private fun ensureService() {
         // Cheap and safe to call repeatedly: the service promotes itself to
@@ -111,7 +117,10 @@ class AudioEngine(
                 dbProvider
             )
             val http = DefaultHttpDataSource.Factory().setUserAgent("QuranSanctuary/1.0")
-            val cachedSource = CacheDataSource.Factory().setCache(cache!!).setUpstreamDataSourceFactory(http)
+            // DefaultDataSource also opens file:// URIs, so downloaded surahs play
+            // locally instead of being sent to the HTTP-only upstream.
+            val upstream = DefaultDataSource.Factory(context, http)
+            val cachedSource = CacheDataSource.Factory().setCache(cache!!).setUpstreamDataSourceFactory(upstream)
             val audioAttrs = AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
@@ -174,7 +183,7 @@ class AudioEngine(
     // ---------- quran ----------
 
     fun localQuranFile(reciterId: String, surahId: Int): File =
-        File(context.filesDir, "audio/$reciterId/$surahId.mp3")
+        File(context.filesDir, "${AudioStorage.QURAN_DIR}/$reciterId/$surahId.mp3")
 
     private fun resolveQuranUri(reciterId: String, surahId: Int): Uri {
         val local = localQuranFile(reciterId, surahId)
@@ -206,7 +215,13 @@ class AudioEngine(
         if (!playersReady || !this::quranPlayer.isInitialized) return
         val surah = repo.getSurah(surahId) ?: return
         val reciter = repo.getReciter(reciterId) ?: return
+        val rec = repo.getRecitation(reciterId, surahId)
         val uri = resolveQuranUri(reciterId, surahId)
+        // Mirror only: the timings bundled with the primary file do not match it.
+        val fallbackUri = rec?.fallbackAudioUrl?.takeIf { it.isNotBlank() }?.let(Uri::parse)
+        val loadToken = ++quranLoadToken
+        currentFallbackUri = fallbackUri
+        fallbackTried = false
         val metadata = MediaMetadata.Builder()
             .setTitle("${surah.number}. ${surah.transliteratedName}")
             .setArtist(reciter.localizedName("az"))
@@ -224,6 +239,9 @@ class AudioEngine(
         )
         scope.launch {
             val t = repo.getTimings(reciterId, surahId)
+            // A mirror may have taken over while this was loading — its edit is
+            // different, so never attach the primary file's timings to it.
+            if (loadToken != quranLoadToken) return@launch
             if (_state.value.surahId == surahId && _state.value.reciterId == reciterId) {
                 _state.value = _state.value.copy(timings = t, hasSync = t != null)
             }
@@ -360,7 +378,7 @@ class AudioEngine(
         runCatching { initialize() }
         if (!playersReady || !this::ambientPlayer.isInitialized) return
         val sound = repo.getAmbient(id) ?: return
-        val local = File(context.filesDir, "audio/ambient/$id.mp3")
+        val local = File(context.filesDir, "${AudioStorage.AMBIENT_DIR}/$id.mp3")
         val uri = if (local.exists() && local.length() > 0) Uri.fromFile(local) else Uri.parse(sound.audioUrl)
         runCatching {
             ambientPlayer.setMediaItem(MediaItem.fromUri(uri))
@@ -487,6 +505,36 @@ class AudioEngine(
         }
 
         override fun onPlayerError(error: PlaybackException) {
+            val mirror = currentFallbackUri
+            if (!fallbackTried && mirror != null) {
+                fallbackTried = true
+                // Drop the pending primary timings: the mirror is a different edit.
+                quranLoadToken++
+                val resume = quranPlayer.playWhenReady && _state.value.quranEnabled
+                val resumeAt = runCatching {
+                    maxOf(quranPlayer.currentPosition, _state.value.positionMs)
+                }.getOrDefault(_state.value.positionMs).coerceAtLeast(0L)
+                _state.value = _state.value.copy(
+                    quranLoading = true,
+                    error = null,
+                    timings = null,
+                    hasSync = false,
+                    activeAyah = 0
+                )
+                runCatching {
+                    val metadata = quranPlayer.mediaMetadata
+                    quranPlayer.setMediaItem(
+                        MediaItem.Builder().setUri(mirror).setMediaMetadata(metadata).build()
+                    )
+                    quranPlayer.prepare()
+                    if (resumeAt > 0L) quranPlayer.seekTo(resumeAt)
+                    quranPlayer.playWhenReady = resume
+                    if (resume) quranPlayer.play()
+                }.onFailure {
+                    _state.value = _state.value.copy(quranLoading = false, error = "audio")
+                }
+                return
+            }
             _state.value = _state.value.copy(quranLoading = false, error = "audio")
         }
     }

@@ -153,7 +153,7 @@ fun ReaderScreen(vm: AppViewModel, nav: NavController, surahId: Int) {
     val headerCount = 2 + if (QuranRepository.showsBismillah(surahId)) 1 else 0
     // Auto-scroll to the active verse while reciting (paused while the user scrolls).
     LaunchedEffect(player.activeAyah, player.quranPlaying, surahId, loadedVerses) {
-        if (isCurrentSurah && player.quranPlaying && loadedVerses != null) {
+        if (isCurrentSurah && player.quranPlaying && player.timings != null && loadedVerses != null) {
             if (!listState.isScrollInProgress) {
                 try {
                     val verseCount = loadedVerses.arabic.size
