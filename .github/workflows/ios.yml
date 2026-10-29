@@ -1,0 +1,145 @@
+name: iOS
+
+# Azanify iOS pipeline.
+# No Mac on the developer machine: the macOS runner is the build machine,
+# the simulator screenshot artifact is the visual check.
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "ios/**"
+      - "iosApp/**"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "ios/**"
+      - "iosApp/**"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  simulator:
+    name: Build + visual check
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          set -euo pipefail
+          ls /Applications | grep -i '^Xcode' || true
+          XC="$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1 || true)"
+          if [ -n "${XC:-}" ]; then sudo xcode-select -s "$XC"; fi
+          xcodebuild -version
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Cache Kotlin/Native toolchain
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('ios/shared/build.gradle.kts') }}
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+
+      - name: Build Kotlin/Native framework
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          if [ "$(uname -m)" = "arm64" ]; then
+            TARGET=iosSimulatorArm64
+            TASK=linkDebugFrameworkIosSimulatorArm64
+          else
+            TARGET=iosX64
+            TASK=linkDebugFrameworkIosX64
+          fi
+          echo "KMP_TARGET=$TARGET" >> "$GITHUB_ENV"
+          gradle ":shared:$TASK" --no-daemon --stacktrace
+
+      - name: Stage framework for Xcode
+        run: |
+          set -euo pipefail
+          mkdir -p iosApp/Frameworks
+          rm -rf iosApp/Frameworks/Shared.framework
+          cp -R "ios/shared/build/bin/$KMP_TARGET/debugFramework/Shared.framework" iosApp/Frameworks/
+          ls -la iosApp/Frameworks/Shared.framework
+
+      - name: Generate Xcode project
+        run: |
+          set -euo pipefail
+          brew install xcodegen
+          cd iosApp
+          xcodegen generate --spec project.yml
+          xcodebuild -list -project Azanify.xcodeproj
+
+      - name: Create simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          RUNTIME="$(xcrun simctl list runtimes -j | python3 -c "
+import json,sys
+d=json.load(sys.stdin)['runtimes']
+ios=[r for r in d if r['platform']=='iOS' and r.get('isAvailable')]
+print(sorted(ios, key=lambda r: r['version'])[-1]['identifier'])")"
+          DEVICE_TYPE="$(xcrun simctl list devicetypes -j | python3 -c "
+import json,sys
+d=json.load(sys.stdin)['devicetypes']
+phones=[x for x in d if x['name'].startswith('iPhone')]
+print(sorted(phones, key=lambda x: x['name'])[-1]['identifier'])")"
+          UDID="$(xcrun simctl create 'Azanify CI' "$DEVICE_TYPE" "$RUNTIME")"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          echo "Using $DEVICE_TYPE on $RUNTIME ($UDID)"
+
+      - name: Build app
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project iosApp/Azanify.xcodeproj \
+            -scheme Azanify \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath iosApp/build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Launch and screenshot
+        run: |
+          set -euo pipefail
+          UDID="${{ steps.sim.outputs.udid }}"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" "iosApp/build/Build/Products/Debug-iphonesimulator/Azanify.app"
+          xcrun simctl launch "$UDID" com.quransanctuary.app
+          sleep 12
+          mkdir -p artifacts
+          xcrun simctl io "$UDID" screenshot "artifacts/ios-home.png"
+          ls -la artifacts
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-screenshots
+          path: artifacts/
+          if-no-files-found: warn
+
+      - name: Dump build log on failure
+        if: failure()
+        run: |
+          find iosApp/build -name "*.xcactivitylog" -maxdepth 6 2>/dev/null | head -5 || true
+          xcrun simctl list devices | head -40 || true
