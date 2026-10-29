@@ -114,16 +114,19 @@ struct ReaderView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    player.play(
-                        reciterId: "yasir-al-dawsari",
-                        surahId: surahNumber,
-                        title: surahTitle,
-                        reciterName: "Yasir Al-Dawsari"
-                    )
-                } label: {
-                    Image(systemName: player.isPlaying && isActiveSurah ? "pause.fill" : "play.fill")
-                        .foregroundStyle(Azanify.Palette.gold)
+                HStack(spacing: 14) {
+                    ShareSurahButton(surah: SurahCatalog.all.first { $0.number == surahNumber }!, verses: verses)
+                    Button {
+                        player.play(
+                            reciterId: "yasir-al-dawsari",
+                            surahId: surahNumber,
+                            title: surahTitle,
+                            reciterName: "Yasir Al-Dawsari"
+                        )
+                    } label: {
+                        Image(systemName: player.isPlaying && isActiveSurah ? "pause.fill" : "play.fill")
+                            .foregroundStyle(Azanify.Palette.gold)
+                    }
                 }
             }
         }
