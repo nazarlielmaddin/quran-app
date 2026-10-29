@@ -123,6 +123,7 @@ struct QuranView: View {
 private struct SurahRow: View {
     @EnvironmentObject private var l10n: L10n
     @EnvironmentObject private var player: AudioPlayer
+    @EnvironmentObject private var downloader: AudioDownloader
     let surah: Surah
 
     var body: some View {
@@ -151,6 +152,30 @@ private struct SurahRow: View {
                 .foregroundStyle(Azanify.Palette.goldSoft.opacity(0.9))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+
+            Button {
+                let k = downloader.key(reciterId: "yasir-al-dawsari", surahId: surah.number)
+                if downloader.isDownloaded(reciterId: "yasir-al-dawsari", surahId: surah.number) {
+                    // already downloaded
+                } else if let url = RecitationCatalog.url(reciterId: "yasir-al-dawsari", surahId: surah.number) {
+                    downloader.download(reciterId: "yasir-al-dawsari", surahId: surah.number, remoteURL: url)
+                }
+            } label: {
+                if downloader.isDownloaded(reciterId: "yasir-al-dawsari", surahId: surah.number) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(Azanify.Palette.goldSoft)
+                } else if downloader.progress[downloader.key(reciterId: "yasir-al-dawsari", surahId: surah.number)] != nil {
+                    ProgressView()
+                        .tint(Azanify.Palette.gold)
+                        .scaleEffect(0.7)
+                } else {
+                    Image(systemName: "arrow.down.circle")
+                        .font(.system(size: 20))
+                        .foregroundStyle(Azanify.Palette.mistFaint)
+                }
+            }
+            .buttonStyle(.plain)
 
             Button {
                 player.play(

@@ -53,7 +53,7 @@ final class AudioPlayer: ObservableObject {
     // MARK: - Public
 
     func play(reciterId: String, surahId: Int, title: String, reciterName: String) {
-        guard let url = RecitationCatalog.url(reciterId: reciterId, surahId: surahId) else {
+        guard let remote = RecitationCatalog.url(reciterId: reciterId, surahId: surahId) else {
             return
         }
         stop()
@@ -62,6 +62,7 @@ final class AudioPlayer: ObservableObject {
         self.reciterName = reciterName
         self.surahNumber = surahId
 
+        let url = AudioDownloader.shared.localURL(reciterId: reciterId, surahId: surahId) ?? remote
         let item = AVPlayerItem(url: url)
         let p = AVPlayer(playerItem: item)
         player = p

@@ -5,6 +5,7 @@ struct RootView: View {
     @StateObject private var l10n = L10n()
     @StateObject private var player = AudioPlayer()
     @StateObject private var azan = AzanScheduler()
+    @StateObject private var downloader = AudioDownloader.shared
     @State private var selection: Int = RootView.initialTab
 
     /// CI launches the app with `-tab-<name>` so every screen can be screenshotted.
@@ -43,6 +44,7 @@ struct RootView: View {
         .environmentObject(l10n)
         .environmentObject(player)
         .environmentObject(azan)
+        .environmentObject(downloader)
         .environment(\.layoutDirection, l10n.language.direction)
         .tint(Azanify.Palette.gold)
         .preferredColorScheme(.dark)
