@@ -41,34 +41,44 @@ struct QuranView: View {
     }
 
     var body: some View {
-        ZStack {
-            Azanify.background.ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                Azanify.background.ignoresSafeArea()
 
-            VStack(spacing: 14) {
-                header
-                searchField
+                VStack(spacing: 14) {
+                    header
+                    searchField
 
-                if filtered.isEmpty {
-                    Spacer()
-                    Text(l10n.t("surahs.noneFound"))
-                        .font(AppFont.text(13))
-                        .foregroundStyle(Azanify.Palette.mistFaint)
-                    Spacer()
-                } else {
-                    ScrollView(showsIndicators: false) {
-                        LazyVStack(spacing: 0) {
-                            ForEach(filtered) { surah in
-                                SurahRow(surah: surah)
-                                Rectangle()
-                                    .fill(Color.white.opacity(0.05))
-                                    .frame(height: 1)
-                                    .padding(.leading, 62)
+                    if filtered.isEmpty {
+                        Spacer()
+                        Text(l10n.t("surahs.noneFound"))
+                            .font(AppFont.text(13))
+                            .foregroundStyle(Azanify.Palette.mistFaint)
+                        Spacer()
+                    } else {
+                        ScrollView(showsIndicators: false) {
+                            LazyVStack(spacing: 0) {
+                                ForEach(filtered) { surah in
+                                    NavigationLink(destination: ReaderView(surahNumber: surah.number)) {
+                                        SurahRow(surah: surah)
+                                    }
+                                    .buttonStyle(.plain)
+
+                                    Rectangle()
+                                        .fill(Color.white.opacity(0.05))
+                                        .frame(height: 1)
+                                        .padding(.leading, 62)
+                                }
                             }
+                            .padding(.bottom, 24)
                         }
-                        .padding(.bottom, 24)
                     }
                 }
             }
+            .navigationTitle(l10n.t("nav.surahs"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(Azanify.Palette.ink, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 
