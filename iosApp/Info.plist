@@ -24,6 +24,18 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Azanify yerləşdiyiniz şəhərə görə namaz vaxtlarını dəqiq hesablayır.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>inter_regular.ttf</string>
+		<string>inter_medium.ttf</string>
+		<string>inter_semibold.ttf</string>
+		<string>inter_bold.ttf</string>
+		<string>inter_display_regular.ttf</string>
+		<string>inter_display_medium.ttf</string>
+		<string>inter_display_semibold.ttf</string>
+		<string>amiri_regular.ttf</string>
+		<string>amiri_bold.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

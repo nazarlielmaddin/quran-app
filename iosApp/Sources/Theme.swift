@@ -44,6 +44,36 @@ enum Azanify {
     }
 }
 
+/// Fonts shipped inside the APK: Inter for latin, Inter Display for headings,
+/// Amiri for Arabic script. PostScript names are used so SwiftUI picks the
+/// exact face instead of synthesising a weight.
+enum AppFont {
+    enum Weight {
+        case regular, medium, semibold, bold
+
+        var postScript: String {
+            switch self {
+            case .regular: return "Regular"
+            case .medium: return "Medium"
+            case .semibold: return "SemiBold"
+            case .bold: return "Bold"
+            }
+        }
+    }
+
+    static func text(_ size: CGFloat, _ weight: Weight = .regular) -> Font {
+        .custom("Inter-\(weight.postScript)", size: size)
+    }
+
+    static func display(_ size: CGFloat, _ weight: Weight = .regular) -> Font {
+        .custom("InterDisplay-\(weight.postScript)", size: size)
+    }
+
+    static func arabic(_ size: CGFloat, bold: Bool = false) -> Font {
+        .custom(bold ? "Amiri-Bold" : "Amiri-Regular", size: size)
+    }
+}
+
 extension Color {
     init(hex: UInt32) {
         self.init(
@@ -54,15 +84,29 @@ extension Color {
             opacity: 1.0
         )
     }
+
+    init?(hexString: String) {
+        var value = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+        if value.hasPrefix("#") { value.removeFirst() }
+        guard value.count == 6, let number = UInt32(value, radix: 16) else { return nil }
+        self.init(hex: number)
+    }
 }
 
 /// Small caps section label used across the app.
 struct SectionLabel: View {
     let text: String
+
     var body: some View {
         Text(text.uppercased())
-            .font(.system(size: 11, weight: .semibold))
+            .font(AppFont.text(11, .semibold))
             .tracking(2.2)
             .foregroundStyle(Azanify.Palette.gold.opacity(0.85))
+    }
+}
+
+extension View {
+    func azanifyCard() -> some View {
+        background(Azanify.card)
     }
 }

@@ -1,36 +1,6 @@
 import Foundation
 import Shared
 
-/// Azerbaijani copy for the iOS shell. Android keeps its own strings.json for now;
-/// both will be merged into the shared module in a later phase.
-enum Loc {
-    static let prayerNames: [String: String] = [
-        "fajr": "Sübh",
-        "sunrise": "Günəş",
-        "dhuhr": "Zöhr",
-        "asr": "Əsr",
-        "maghrib": "Məğrib",
-        "isha": "İşa"
-    ]
-
-    static func prayer(_ key: String) -> String { prayerNames[key] ?? key }
-
-    static func longDate(_ date: Date, in zone: TimeZone) -> String {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "az_AZ")
-        f.timeZone = zone
-        f.dateFormat = "d MMMM, EEEE"
-        return f.string(from: date).capitalizedFirst
-    }
-}
-
-extension String {
-    var capitalizedFirst: String {
-        guard let first else { return self }
-        return first.uppercased() + dropFirst()
-    }
-}
-
 struct City: Identifiable, Hashable {
     let id: String
     let nameAz: String
@@ -99,21 +69,11 @@ final class PrayerStore: ObservableObject {
         slots.first { $0.isObligatory && $0.minutes > currentMinutes }
     }
 
-    var nextTitle: String {
-        Loc.prayer(nextSlot?.id ?? "fajr")
-    }
-
-    var nextTime: String {
-        nextSlot?.time ?? slots.first?.time ?? "--:--"
-    }
-
-    var remainingText: String {
-        let target = nextSlot?.minutes ?? ((slots.first?.minutes ?? 0) + 1440)
-        let delta = max(0, target - currentMinutes)
-        let h = delta / 60
-        let m = delta % 60
-        if h > 0 { return "\(h) saat \(m) dəq qaldı" }
-        return "\(m) dəq qaldı"
+    /// Minutes until the next obligatory prayer; wraps to tomorrow's Fajr.
+    var remainingMinutes: Int {
+        guard let first = slots.first else { return 0 }
+        let target = nextSlot?.minutes ?? (first.minutes + 1440)
+        return max(0, target - currentMinutes)
     }
 
     func tick() {

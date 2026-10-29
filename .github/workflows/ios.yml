@@ -123,7 +123,7 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "iosApp/build/Build/Products/Debug-iphonesimulator/Azanify.app"
           mkdir -p artifacts
-          for TAB in home quran settings; do
+          for TAB in home reciters quran atmosphere settings; do
             xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
             xcrun simctl launch "$UDID" "$BUNDLE" "-tab-$TAB"
             sleep 8

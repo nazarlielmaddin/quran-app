@@ -26,6 +26,7 @@ enum SurahCatalog {
 }
 
 struct QuranView: View {
+    @EnvironmentObject private var l10n: L10n
     @State private var query = ""
 
     private var filtered: [Surah] {
@@ -44,37 +45,48 @@ struct QuranView: View {
             Azanify.background.ignoresSafeArea()
 
             VStack(spacing: 14) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("QURAN")
-                            .font(.system(size: 19, weight: .semibold))
-                            .tracking(5)
-                            .foregroundStyle(Azanify.Palette.gold)
-                        Text("114 surə · Azərbaycan dilində")
-                            .font(.system(size: 12))
-                            .foregroundStyle(Azanify.Palette.mistFaint)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-
+                header
                 searchField
 
-                ScrollView(showsIndicators: false) {
-                    LazyVStack(spacing: 0) {
-                        ForEach(filtered) { surah in
-                            SurahRow(surah: surah)
-                            Rectangle()
-                                .fill(Color.white.opacity(0.05))
-                                .frame(height: 1)
-                                .padding(.leading, 62)
+                if filtered.isEmpty {
+                    Spacer()
+                    Text(l10n.t("surahs.noneFound"))
+                        .font(AppFont.text(13))
+                        .foregroundStyle(Azanify.Palette.mistFaint)
+                    Spacer()
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filtered) { surah in
+                                SurahRow(surah: surah)
+                                Rectangle()
+                                    .fill(Color.white.opacity(0.05))
+                                    .frame(height: 1)
+                                    .padding(.leading, 62)
+                            }
                         }
+                        .padding(.bottom, 24)
                     }
-                    .padding(.bottom, 24)
                 }
             }
         }
+    }
+
+    private var header: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(l10n.t("nav.surahs").uppercased())
+                    .font(AppFont.display(19, .semibold))
+                    .tracking(5)
+                    .foregroundStyle(Azanify.Palette.gold)
+                Text(l10n.t("surahs.title"))
+                    .font(AppFont.text(12))
+                    .foregroundStyle(Azanify.Palette.mistFaint)
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 10)
     }
 
     private var searchField: some View {
@@ -82,8 +94,8 @@ struct QuranView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 13))
                 .foregroundStyle(Azanify.Palette.mistFaint)
-            TextField("Surə axtar", text: $query)
-                .font(.system(size: 14))
+            TextField(l10n.t("surahs.searchPlaceholder"), text: $query)
+                .font(AppFont.text(14))
                 .foregroundStyle(Azanify.Palette.mist)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
@@ -99,12 +111,13 @@ struct QuranView: View {
 }
 
 private struct SurahRow: View {
+    @EnvironmentObject private var l10n: L10n
     let surah: Surah
 
     var body: some View {
         HStack(spacing: 14) {
             Text("\(surah.number)")
-                .font(.system(size: 15, weight: .medium, design: .serif))
+                .font(AppFont.display(15, .medium))
                 .foregroundStyle(Azanify.Palette.gold)
                 .frame(width: 32, height: 32)
                 .overlay(
@@ -112,23 +125,31 @@ private struct SurahRow: View {
                 )
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(surah.azerbaijaniName)
-                    .font(.system(size: 15, weight: .medium))
+                Text(primaryName)
+                    .font(AppFont.text(15, .medium))
                     .foregroundStyle(Azanify.Palette.mist)
-                Text("\(surah.englishName) · \(surah.verses) ayə")
-                    .font(.system(size: 11))
+                Text("\(secondaryName) · \(surah.verses) \(l10n.t("surahs.ayahs"))")
+                    .font(AppFont.text(11))
                     .foregroundStyle(Azanify.Palette.mistFaint)
             }
 
             Spacer(minLength: 8)
 
             Text(surah.arabicName)
-                .font(.system(size: 17))
+                .font(AppFont.arabic(18))
                 .foregroundStyle(Azanify.Palette.goldSoft.opacity(0.9))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
+    }
+
+    private var primaryName: String {
+        l10n.language == .az ? surah.azerbaijaniName : surah.englishName
+    }
+
+    private var secondaryName: String {
+        l10n.language == .az ? surah.englishName : surah.transliteratedName
     }
 }
