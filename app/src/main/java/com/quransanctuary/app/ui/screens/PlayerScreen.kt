@@ -545,8 +545,7 @@ private fun SectionCaption(text: String) {
     Text(
         text = text.uppercase(),
         style = MaterialTheme.typography.labelSmall.copy(
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.5.sp
+            fontWeight = FontWeight.Bold
         ),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Center,

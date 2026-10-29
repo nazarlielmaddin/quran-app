@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ink">#08080B</color>
-    <color name="gold">#C8A97C</color>
+    <color name="ink">#07100C</color>
+    <color name="gold">#C9A86A</color>
 
     <style name="Theme.QuranSanctuary" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/ink</item>
@@ -13,8 +13,9 @@
     <style name="Theme.QuranSanctuary.Main" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/ink</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/ink</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:enforceStatusBarContrast">false</item>
