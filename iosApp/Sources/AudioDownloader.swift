@@ -78,7 +78,7 @@ final class AudioDownloader: NSObject, ObservableObject, URLSessionDownloadDeleg
 
     // MARK: - Private
 
-    private func fileURL(reciterId: String, surahId: Int) -> URL {
+    private nonisolated func fileURL(reciterId: String, surahId: Int) -> URL {
         let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("Azanify/audio/\(reciterId)", isDirectory: true)
         return dir.appendingPathComponent("\(surahId).mp3")
