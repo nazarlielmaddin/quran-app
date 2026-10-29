@@ -22,6 +22,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Azanify namaz vaxtlarında azan bildirişi göndərir.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Azanify yerləşdiyiniz şəhərə görə namaz vaxtlarını dəqiq hesablayır.</string>
 	<key>UIAppFonts</key>

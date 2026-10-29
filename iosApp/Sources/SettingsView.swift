@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject private var store: PrayerStore
     @EnvironmentObject private var l10n: L10n
+    @EnvironmentObject private var azan: AzanScheduler
 
     var body: some View {
         ZStack {
@@ -13,6 +14,7 @@ struct SettingsView: View {
                     header
                     languageCard
                     cityCard
+                    azanCard
                     aboutCard
                 }
                 .padding(.horizontal, 20)
@@ -70,6 +72,9 @@ struct SettingsView: View {
             ForEach(PrayerStore.cities) { city in
                 Button {
                     store.select(city)
+                    if azan.isEnabled {
+                        Task { await azan.scheduleForSelectedCity() }
+                    }
                 } label: {
                     HStack {
                         Text(l10n.language == .az ? city.nameAz : city.nameEn)
@@ -86,6 +91,27 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
             }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .azanifyCard()
+    }
+
+    private var azanCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionLabel(text: "Azan bildirişləri")
+
+            Toggle(isOn: $azan.isEnabled) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Gündəlik azan")
+                        .font(AppFont.text(15))
+                        .foregroundStyle(Azanify.Palette.mist)
+                    Text("5 namaz vaxtı üçün bildiriş (7 gün əvvəlcədən planlanır)")
+                        .font(AppFont.text(11))
+                        .foregroundStyle(Azanify.Palette.mistFaint)
+                }
+            }
+            .tint(Azanify.Palette.gold)
         }
         .padding(20)
         .frame(maxWidth: .infinity, alignment: .leading)
