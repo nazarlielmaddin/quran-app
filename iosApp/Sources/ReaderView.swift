@@ -98,7 +98,7 @@ struct ReaderView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                 }
-                .onChange(of: player.currentTime) { _, _ in
+                .onChange(of: player.currentTime) { _ in
                     guard isActiveSurah else { return }
                     let newActive = activeVerseIndex(for: Int(player.currentTime * 1000))
                     if newActive != activeIndex {
