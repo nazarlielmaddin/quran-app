@@ -3,6 +3,8 @@ import SwiftUI
 
 @MainActor
 final class AudioDownloader: NSObject, ObservableObject, URLSessionDownloadDelegate {
+    static let shared = AudioDownloader()
+
     @Published private(set) var progress: [String: Double] = [:]   // key: "reciter:surah"
     @Published private(set) var downloaded: Set<String> = []
 
