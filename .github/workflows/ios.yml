@@ -86,23 +86,20 @@ jobs:
           xcodegen generate --spec project.yml
           xcodebuild -list -project Azanify.xcodeproj
 
-      - name: Create simulator
+      - name: Pick a simulator
         id: sim
         run: |
           set -euo pipefail
-          RUNTIME="$(xcrun simctl list runtimes -j | python3 -c "
-import json,sys
-d=json.load(sys.stdin)['runtimes']
-ios=[r for r in d if r['platform']=='iOS' and r.get('isAvailable')]
-print(sorted(ios, key=lambda r: r['version'])[-1]['identifier'])")"
-          DEVICE_TYPE="$(xcrun simctl list devicetypes -j | python3 -c "
-import json,sys
-d=json.load(sys.stdin)['devicetypes']
-phones=[x for x in d if x['name'].startswith('iPhone')]
-print(sorted(phones, key=lambda x: x['name'])[-1]['identifier'])")"
-          UDID="$(xcrun simctl create 'Azanify CI' "$DEVICE_TYPE" "$RUNTIME")"
+          LINE="$(xcrun simctl list devices available | grep -m1 -E 'iPhone' || true)"
+          echo "device line: $LINE"
+          UDID="$(echo "$LINE" | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}' | head -1)"
+          if [ -z "$UDID" ]; then
+            RUNTIME="$(xcrun simctl list runtimes | grep -E '^iOS ' | head -1 | grep -oE 'com\.apple\.CoreSimulator\.SimRuntime\.[^ ]+' || true)"
+            TYPE="$(xcrun simctl list devicetypes | grep -m1 -E 'iPhone' | grep -oE 'com\.apple\.CoreSimulator\.SimDeviceType\.[^ ]+' || true)"
+            UDID="$(xcrun simctl create 'Azanify CI' "$TYPE" "$RUNTIME")"
+          fi
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
-          echo "Using $DEVICE_TYPE on $RUNTIME ($UDID)"
+          xcrun simctl list devices available | head -20
 
       - name: Build app
         run: |
