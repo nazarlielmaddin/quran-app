@@ -112,6 +112,7 @@ struct QuranView: View {
 
 private struct SurahRow: View {
     @EnvironmentObject private var l10n: L10n
+    @EnvironmentObject private var player: AudioPlayer
     let surah: Surah
 
     var body: some View {
@@ -140,6 +141,20 @@ private struct SurahRow: View {
                 .foregroundStyle(Azanify.Palette.goldSoft.opacity(0.9))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+
+            Button {
+                player.play(
+                    reciterId: "yasir-al-dawsari",
+                    surahId: surah.number,
+                    title: primaryName,
+                    reciterName: "Yasir Al-Dawsari"
+                )
+            } label: {
+                Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                    .font(.system(size: 30, weight: .light))
+                    .foregroundStyle(isPlaying ? Azanify.Palette.goldSoft : Azanify.Palette.gold.opacity(0.7))
+            }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
@@ -151,5 +166,9 @@ private struct SurahRow: View {
 
     private var secondaryName: String {
         l10n.language == .az ? surah.englishName : surah.transliteratedName
+    }
+
+    private var isPlaying: Bool {
+        player.surahNumber == surah.number && player.isPlaying
     }
 }

@@ -3,6 +3,7 @@ import SwiftUI
 struct RootView: View {
     @StateObject private var store = PrayerStore()
     @StateObject private var l10n = L10n()
+    @StateObject private var player = AudioPlayer()
     @State private var selection: Int = RootView.initialTab
 
     /// CI launches the app with `-tab-<name>` so every screen can be screenshotted.
@@ -39,8 +40,13 @@ struct RootView: View {
         }
         .environmentObject(store)
         .environmentObject(l10n)
+        .environmentObject(player)
         .environment(\.layoutDirection, l10n.language.direction)
         .tint(Azanify.Palette.gold)
         .preferredColorScheme(.dark)
+        .overlay(alignment: .bottom) {
+            MiniPlayer()
+                .padding(.bottom, 52)
+        }
     }
 }
