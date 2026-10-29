@@ -118,13 +118,17 @@ jobs:
         run: |
           set -euo pipefail
           UDID="${{ steps.sim.outputs.udid }}"
+          BUNDLE=com.quransanctuary.app
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" "iosApp/build/Build/Products/Debug-iphonesimulator/Azanify.app"
-          xcrun simctl launch "$UDID" com.quransanctuary.app
-          sleep 12
           mkdir -p artifacts
-          xcrun simctl io "$UDID" screenshot "artifacts/ios-home.png"
+          for TAB in home quran settings; do
+            xcrun simctl terminate "$UDID" "$BUNDLE" 2>/dev/null || true
+            xcrun simctl launch "$UDID" "$BUNDLE" "-tab-$TAB"
+            sleep 8
+            xcrun simctl io "$UDID" screenshot "artifacts/ios-$TAB.png"
+          done
           ls -la artifacts
 
       - name: Upload screenshots
