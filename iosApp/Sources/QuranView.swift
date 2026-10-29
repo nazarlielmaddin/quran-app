@@ -154,10 +154,8 @@ private struct SurahRow: View {
                 .minimumScaleFactor(0.7)
 
             Button {
-                let k = downloader.key(reciterId: "yasir-al-dawsari", surahId: surah.number)
-                if downloader.isDownloaded(reciterId: "yasir-al-dawsari", surahId: surah.number) {
-                    // already downloaded
-                } else if let url = RecitationCatalog.url(reciterId: "yasir-al-dawsari", surahId: surah.number) {
+                if !downloader.isDownloaded(reciterId: "yasir-al-dawsari", surahId: surah.number),
+                   let url = RecitationCatalog.url(reciterId: "yasir-al-dawsari", surahId: surah.number) {
                     downloader.download(reciterId: "yasir-al-dawsari", surahId: surah.number, remoteURL: url)
                 }
             } label: {
