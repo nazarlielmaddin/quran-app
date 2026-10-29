@@ -68,7 +68,7 @@ final class AzanScheduler: ObservableObject {
             for moment in moments {
                 guard PrayerKeys.shared.daily.contains(moment.key) else { continue }
                 guard let triggerDate = calendar.date(
-                    bySettingHour: moment.hour, minute: moment.minute, second: 0, of: date
+                    bySettingHour: Int(moment.hour), minute: Int(moment.minute), second: 0, of: date
                 ) else { continue }
                 // Skip prayers that have already passed today.
                 if triggerDate <= Date() { continue }
