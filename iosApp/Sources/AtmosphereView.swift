@@ -27,6 +27,7 @@ enum AmbientCatalog {
 
 struct AtmosphereView: View {
     @EnvironmentObject private var l10n: L10n
+    @EnvironmentObject private var ambient: AmbientPlayer
 
     private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
 
@@ -41,6 +42,10 @@ struct AtmosphereView: View {
                     LazyVGrid(columns: columns, spacing: 14) {
                         ForEach(AmbientCatalog.all) { sound in
                             AmbientCard(sound: sound)
+                                .onTapGesture {
+                                    guard let url = URL(string: sound.audioUrl) else { return }
+                                    ambient.toggle(id: sound.id, url: url)
+                                }
                         }
                     }
                 }
@@ -71,6 +76,7 @@ struct AtmosphereView: View {
 
 private struct AmbientCard: View {
     @EnvironmentObject private var l10n: L10n
+    @EnvironmentObject private var ambient: AmbientPlayer
     let sound: AmbientSound
 
     private var colors: [Color] {
@@ -78,8 +84,19 @@ private struct AmbientCard: View {
         return parsed.count >= 2 ? parsed : [Azanify.Palette.forestSoft, Azanify.Palette.ink]
     }
 
+    private var isPlaying: Bool {
+        ambient.currentId == sound.id && ambient.isPlaying
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Spacer()
+                Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                    .font(.system(size: 22, weight: .light))
+                    .foregroundStyle(.white.opacity(isPlaying ? 0.95 : 0.5))
+            }
+
             Spacer(minLength: 0)
 
             Text(categoryLabel)
@@ -105,7 +122,7 @@ private struct AmbientCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                .stroke(isPlaying ? Azanify.Palette.gold : Color.white.opacity(0.08), lineWidth: isPlaying ? 2 : 1)
         )
     }
 
