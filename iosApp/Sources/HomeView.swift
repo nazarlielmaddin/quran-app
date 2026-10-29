@@ -31,7 +31,7 @@ struct HomeView: View {
                     .font(.system(size: 19, weight: .semibold))
                     .tracking(5)
                     .foregroundStyle(Azanify.Palette.gold)
-                Text(Loc.longDate(store.now))
+                Text(Loc.longDate(store.now, in: store.city.timeZone))
                     .font(.system(size: 12))
                     .foregroundStyle(Azanify.Palette.mistFaint)
             }

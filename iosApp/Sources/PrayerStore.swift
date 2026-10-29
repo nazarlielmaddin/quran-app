@@ -15,9 +15,10 @@ enum Loc {
 
     static func prayer(_ key: String) -> String { prayerNames[key] ?? key }
 
-    static func longDate(_ date: Date) -> String {
+    static func longDate(_ date: Date, in zone: TimeZone) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: "az_AZ")
+        f.timeZone = zone
         f.dateFormat = "d MMMM, EEEE"
         return f.string(from: date).capitalizedFirst
     }
@@ -36,6 +37,18 @@ struct City: Identifiable, Hashable {
     let nameEn: String
     let latitude: Double
     let longitude: Double
+    let utcOffsetHours: Double
+
+    /// Wall clock of the city, independent of the device's own time zone.
+    var timeZone: TimeZone {
+        TimeZone(secondsFromGMT: Int(utcOffsetHours * 3600)) ?? .current
+    }
+
+    var calendar: Calendar {
+        var c = Calendar(identifier: .gregorian)
+        c.timeZone = timeZone
+        return c
+    }
 }
 
 struct Slot: Identifiable {
@@ -65,7 +78,8 @@ final class PrayerStore: ObservableObject {
                 nameAz: $0.nameAz,
                 nameEn: $0.nameEn,
                 latitude: $0.latitude,
-                longitude: $0.longitude
+                longitude: $0.longitude,
+                utcOffsetHours: $0.utcOffsetHours
             )
         }
     }()
@@ -77,7 +91,7 @@ final class PrayerStore: ObservableObject {
     }
 
     var currentMinutes: Int {
-        let c = Calendar.current.dateComponents([.hour, .minute], from: now)
+        let c = city.calendar.dateComponents([.hour, .minute], from: now)
         return (c.hour ?? 0) * 60 + (c.minute ?? 0)
     }
 
@@ -103,9 +117,9 @@ final class PrayerStore: ObservableObject {
     }
 
     func tick() {
-        let dayBefore = Calendar.current.startOfDay(for: now)
+        let dayBefore = city.calendar.startOfDay(for: now)
         now = Date()
-        if Calendar.current.startOfDay(for: now) != dayBefore || slots.isEmpty {
+        if city.calendar.startOfDay(for: now) != dayBefore || slots.isEmpty {
             recalculate()
         }
     }
@@ -118,18 +132,17 @@ final class PrayerStore: ObservableObject {
 
     private func recalculate() {
         now = Date()
-        let comps = Calendar.current.dateComponents([.year, .month, .day], from: now)
+        let comps = city.calendar.dateComponents([.year, .month, .day], from: now)
         let epoch = catalog.epochDay(
             year: Int32(comps.year ?? 1970),
             month: Int32(comps.month ?? 1),
             day: Int32(comps.day ?? 1)
         )
-        let offset = Double(TimeZone.current.secondsFromGMT(for: now)) / 3600.0
         let moments = catalog.calculate(
             epochDay: epoch,
             latitude: city.latitude,
             longitude: city.longitude,
-            utcOffsetHours: offset
+            utcOffsetHours: city.utcOffsetHours
         )
         slots = moments.map { Slot(id: $0.key, hour: Int($0.hour), minute: Int($0.minute)) }
     }
