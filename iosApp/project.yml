@@ -19,8 +19,8 @@ targets:
     platform: iOS
     sources:
       - path: Sources
-    resources:
       - path: Resources
+        buildPhase: resources
     settings:
       base:
         PRODUCT_NAME: Azanify
