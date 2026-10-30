@@ -1,0 +1,79 @@
+name: iOS Free Sideload IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-unsigned-ipa:
+    name: Build unsigned device IPA for AltStore/SideStore
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select newest Xcode
+        run: |
+          set -euo pipefail
+          XC="$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1 || true)"
+          if [ -n "${XC:-}" ]; then sudo xcode-select -s "$XC"; fi
+          xcodebuild -version
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
+
+      - name: Build Kotlin/Native device framework
+        working-directory: ios
+        run: gradle ":shared:linkReleaseFrameworkIosArm64" --no-daemon --stacktrace
+
+      - name: Stage framework and generate Xcode project
+        run: |
+          set -euo pipefail
+          mkdir -p iosApp/Frameworks
+          rm -rf iosApp/Frameworks/Shared.framework
+          cp -R ios/shared/build/bin/iosArm64/releaseFramework/Shared.framework iosApp/Frameworks/
+          brew install xcodegen
+          cd iosApp
+          xcodegen generate --spec project.yml
+
+      - name: Build unsigned device app
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project iosApp/Azanify.xcodeproj \
+            -scheme Azanify \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath iosApp/build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package IPA for AltStore/SideStore
+        run: |
+          set -euo pipefail
+          APP="iosApp/build/Build/Products/Release-iphoneos/Azanify.app"
+          test -d "$APP"
+          rm -rf package
+          mkdir -p package/Payload
+          cp -R "$APP" package/Payload/
+          cd package
+          zip -qry ../Azanify-unsigned.ipa Payload
+          cd ..
+          shasum -a 256 Azanify-unsigned.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: azanify-ios-unsigned-ipa
+          path: Azanify-unsigned.ipa
+          if-no-files-found: error
