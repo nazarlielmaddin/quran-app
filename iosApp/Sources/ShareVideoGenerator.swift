@@ -177,7 +177,7 @@ enum ShareVideoGenerator {
                     ]
                 )
                 y += 170
-                if y > height - 260 { break }
+                if y > CGFloat(height) - 260 { break }
             }
 
             NSString(string: "Azanify").draw(
