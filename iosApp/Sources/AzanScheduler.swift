@@ -76,7 +76,9 @@ final class AzanScheduler: ObservableObject {
                 let content = UNMutableNotificationContent()
                 content.title = "Azanify"
                 content.body = prayerName(moment.key) + " vaxtı"
-                content.sound = UNNotificationSound(named: "azan_notification.caf")
+                content.sound = UNNotificationSound(
+                    named: UNNotificationSoundName(rawValue: "azan_notification.caf")
+                )
                 content.categoryIdentifier = "AZAN"
 
                 let triggerComps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
