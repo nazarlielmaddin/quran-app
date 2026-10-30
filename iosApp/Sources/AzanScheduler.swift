@@ -76,7 +76,7 @@ final class AzanScheduler: ObservableObject {
                 let content = UNMutableNotificationContent()
                 content.title = "Azanify"
                 content.body = prayerName(moment.key) + " vaxtı"
-                content.sound = .default
+                content.sound = UNNotificationSound(named: "azan_notification.caf")
                 content.categoryIdentifier = "AZAN"
 
                 let triggerComps = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
@@ -84,7 +84,13 @@ final class AzanScheduler: ObservableObject {
 
                 let id = "azan.\(city.id).\(moment.key).\(dayOffset)"
                 let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-                try? await center.add(request)
+                do {
+                    try await center.add(request)
+                } catch {
+                    // A single invalid trigger must not prevent the remaining week
+                    // from being scheduled.
+                    continue
+                }
             }
         }
     }

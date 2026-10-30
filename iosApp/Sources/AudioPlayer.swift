@@ -40,9 +40,11 @@ final class AudioPlayer: ObservableObject {
     @Published private(set) var surahNumber: Int? = nil
     @Published private(set) var currentTime: Double = 0
     @Published private(set) var duration: Double = 0
+    @Published private(set) var volume: Float = 0.9
 
     private var player: AVPlayer?
     private var timeObserver: Any?
+    private var endObserver: NSObjectProtocol?
     private var nowPlayingInfo: [String: Any] = [:]
 
     init() {
@@ -65,31 +67,56 @@ final class AudioPlayer: ObservableObject {
         let url = AudioDownloader.shared.localURL(reciterId: reciterId, surahId: surahId) ?? remote
         let item = AVPlayerItem(url: url)
         let p = AVPlayer(playerItem: item)
+        p.volume = volume
         player = p
 
         p.play()
         isPlaying = true
 
         attachTimeObserver(to: p)
+        endObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: item,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.isPlaying = false
+                self?.updateNowPlaying(playing: false)
+            }
+        }
         updateNowPlaying(playing: true)
     }
 
     func toggle() {
         guard let p = player else { return }
         if isPlaying {
-            p.pause()
-            isPlaying = false
+            pause()
         } else {
-            p.play()
-            isPlaying = true
+            play()
         }
-        updateNowPlaying(playing: isPlaying)
+    }
+
+    func play() {
+        guard let player else { return }
+        player.play()
+        isPlaying = true
+        updateNowPlaying(playing: true)
+    }
+
+    func pause() {
+        player?.pause()
+        isPlaying = false
+        updateNowPlaying(playing: false)
     }
 
     func stop() {
         if let observer = timeObserver, let p = player {
             p.removeTimeObserver(observer)
         }
+        if let endObserver {
+            NotificationCenter.default.removeObserver(endObserver)
+        }
+        endObserver = nil
         timeObserver = nil
         player?.pause()
         player = nil
@@ -102,6 +129,12 @@ final class AudioPlayer: ObservableObject {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
+    func setVolume(_ value: Float) {
+        let safeValue = min(max(value, 0), 1)
+        volume = safeValue
+        player?.volume = safeValue
+    }
+
     func seek(to seconds: Double) {
         player?.seek(to: CMTime(seconds: seconds, preferredTimescale: 600))
     }
@@ -111,10 +144,10 @@ final class AudioPlayer: ObservableObject {
     private func configureSession() {
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(.playback, mode: .default, options: [])
+            try session.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .allowAirPlay])
             try session.setActive(true)
         } catch {
-            // Non-fatal: playback still works without the session in many cases.
+            assertionFailure("Unable to activate playback audio session: \(error)")
         }
     }
 
@@ -133,6 +166,7 @@ final class AudioPlayer: ObservableObject {
                 } else if p.timeControlStatus == .paused {
                     self.isPlaying = false
                 }
+                self.updateNowPlaying(playing: self.isPlaying)
             }
         }
     }
@@ -153,11 +187,11 @@ final class AudioPlayer: ObservableObject {
     private func configureRemoteCommands() {
         let center = MPRemoteCommandCenter.shared()
         center.playCommand.addTarget { [weak self] _ in
-            Task { @MainActor in self?.toggle() }
+            Task { @MainActor in self?.play() }
             return .success
         }
         center.pauseCommand.addTarget { [weak self] _ in
-            Task { @MainActor in self?.toggle() }
+            Task { @MainActor in self?.pause() }
             return .success
         }
         center.togglePlayPauseCommand.addTarget { [weak self] _ in

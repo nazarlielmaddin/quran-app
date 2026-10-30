@@ -5,8 +5,10 @@ import SwiftUI
 final class AmbientPlayer: ObservableObject {
     @Published private(set) var isPlaying = false
     @Published private(set) var currentId: String? = nil
+    @Published private(set) var volume: Float = 0.6
 
     private var player: AVPlayer?
+    private var endObserver: NSObjectProtocol?
 
     func play(url: URL, id: String) {
         if currentId == id && isPlaying {
@@ -18,11 +20,17 @@ final class AmbientPlayer: ObservableObject {
         let item = AVPlayerItem(url: url)
         let p = AVPlayer(playerItem: item)
         p.isMuted = false
-        p.volume = 0.6
+        p.volume = volume
         p.actionAtItemEnd = .none
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { [weak p] _ in
+        endObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: item,
+            queue: .main
+        ) { [weak self, weak p] _ in
             p?.seek(to: .zero)
-            p?.play()
+            if self?.isPlaying == true {
+                p?.play()
+            }
         }
         player = p
         p.play()
@@ -35,10 +43,20 @@ final class AmbientPlayer: ObservableObject {
     }
 
     func stop() {
+        if let endObserver {
+            NotificationCenter.default.removeObserver(endObserver)
+        }
+        endObserver = nil
         player?.pause()
         player = nil
         isPlaying = false
         currentId = nil
+    }
+
+    func setVolume(_ value: Float) {
+        let safeValue = min(max(value, 0), 1)
+        volume = safeValue
+        player?.volume = safeValue
     }
 
     func toggle(id: String, url: URL) {

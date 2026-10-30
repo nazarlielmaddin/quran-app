@@ -4,28 +4,47 @@ import UIKit
 struct ShareSurahButton: View {
     let surah: Surah
     let verses: [Verse]
-    @EnvironmentObject private var downloader: AudioDownloader
+    @State private var isGenerating = false
+    @State private var errorMessage: String?
 
     var body: some View {
         Button {
-            share()
+            generateAndShare()
         } label: {
-            Image(systemName: "square.and.arrow.up")
+            Image(systemName: isGenerating ? "hourglass" : "square.and.arrow.up")
                 .foregroundStyle(Azanify.Palette.gold)
+        }
+        .disabled(isGenerating)
+        .alert("Video paylaşımı", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
         }
     }
 
-    private func share() {
-        let title = "\(surah.azerbaijaniName) (\(surah.englishName)) — \(surah.verses) ayə"
-        let body = verses.map { verse in
-            "\(verse.arabic)\n\(verse.translation)"
-        }.joined(separator: "\n\n")
-        var items: [Any] = ["\(title)\n\n\(body)"]
-
-        if let url = downloader.localURL(reciterId: "yasir-al-dawsari", surahId: surah.number) {
-            items.append(url)
+    private func generateAndShare() {
+        isGenerating = true
+        let selectedVerses = verses
+        Task {
+            do {
+                let url = try await ShareVideoGenerator.generate(surah: surah, verses: selectedVerses)
+                await MainActor.run {
+                    isGenerating = false
+                    present(items: [url])
+                }
+            } catch {
+                await MainActor.run {
+                    isGenerating = false
+                    errorMessage = error.localizedDescription
+                }
+            }
         }
+    }
 
+    private func present(items: [Any]) {
         let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let root = scene.windows.first?.rootViewController else { return }
