@@ -28,14 +28,3 @@ captures/
 # Kotlin / misc
 .kotlin/
 .kotlin_module
-
-# iOS / Kotlin Multiplatform
-ios/.gradle/
-ios/build/
-ios/**/build/
-iosApp/build/
-iosApp/Frameworks/
-iosApp/*.xcodeproj/
-iosApp/*.xcworkspace/
-artifacts/
-

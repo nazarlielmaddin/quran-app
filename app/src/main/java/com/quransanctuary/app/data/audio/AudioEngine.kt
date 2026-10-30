@@ -82,13 +82,6 @@ class AudioEngine(
     private var saveJob: Job? = null
     private var lastPersistedMs = 0L
 
-    // Share preview is a full-screen, self-contained player. Duck the app's
-    // own Quran/ambient layers while it is open, then restore exactly what was
-    // playing before it opened.
-    private var previewActive = false
-    private var previewWasQuranPlaying = false
-    private var previewWasAmbientPlaying = false
-
     /** One-shot mirror for the current surah and a token that invalidates stale timing loads. */
     private var currentFallbackUri: Uri? = null
     private var fallbackTried = false
@@ -232,7 +225,7 @@ class AudioEngine(
         val metadata = MediaMetadata.Builder()
             .setTitle("${surah.number}. ${surah.transliteratedName}")
             .setArtist(reciter.localizedName("az"))
-            .setAlbumTitle("Azanify")
+            .setAlbumTitle("Quran Sanctuary")
             .setArtworkUri(artworkUri(reciterId))
             .build()
         quranPlayer.setMediaItem(MediaItem.Builder().setUri(uri).setMediaMetadata(metadata).build())
@@ -349,41 +342,6 @@ class AudioEngine(
         }
         _state.value = _state.value.copy(quranVolume = v)
         scope.launch { settings.setQuranVolume(v) }
-    }
-
-    /** Pause the in-app mix for a self-contained share-video preview. */
-    fun beginSharePreview() {
-        if (previewActive) return
-        previewActive = true
-        previewWasQuranPlaying = runCatching {
-            this::quranPlayer.isInitialized && quranPlayer.isPlaying
-        }.getOrDefault(false)
-        previewWasAmbientPlaying = runCatching {
-            this::ambientPlayer.isInitialized && ambientPlayer.isPlaying
-        }.getOrDefault(false)
-        runCatching { if (this::quranPlayer.isInitialized) quranPlayer.pause() }
-        runCatching { if (this::ambientPlayer.isInitialized) ambientPlayer.pause() }
-    }
-
-    /** Restore the playback state captured by [beginSharePreview]. */
-    fun endSharePreview() {
-        if (!previewActive) return
-        previewActive = false
-        if (previewWasQuranPlaying) {
-            runCatching {
-                if (this::quranPlayer.isInitialized) {
-                    ensureService()
-                    quranPlayer.play()
-                }
-            }
-        }
-        if (previewWasAmbientPlaying) {
-            runCatching {
-                if (this::ambientPlayer.isInitialized) ambientPlayer.play()
-            }
-        }
-        previewWasQuranPlaying = false
-        previewWasAmbientPlaying = false
     }
 
     fun cycleRepeat(): RepeatMode {

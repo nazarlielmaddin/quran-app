@@ -30,16 +30,10 @@ class AppViewModel(val container: AppContainer) : ViewModel() {
     val strings: StateFlow<AppStrings> = locale.map { container.stringsLoader.load(it.id) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, AppStrings())
 
-    val favorites: StateFlow<Set<String>> = container.settings.favoriteReciters
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptySet())
-
     val player = container.audioEngine.state
 
     fun setLocale(v: AppLocale) = viewModelScope.launch { container.settings.setLocale(v) }
     fun setTheme(v: ThemeMode) = viewModelScope.launch { container.settings.setTheme(v) }
     fun setDisplayMode(v: DisplayMode) = viewModelScope.launch { container.settings.setDisplayMode(v) }
     fun setArabicFontScale(v: Float) = viewModelScope.launch { container.settings.setArabicFontScale(v) }
-    fun toggleFavorite(reciterId: String) = viewModelScope.launch {
-        container.settings.toggleFavoriteReciter(reciterId)
-    }
 }

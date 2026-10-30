@@ -28,17 +28,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,7 +58,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -72,10 +65,8 @@ import com.quransanctuary.app.data.local.BookmarkEntity
 import com.quransanctuary.app.data.local.QuranRepository
 import com.quransanctuary.app.data.model.DisplayMode
 import com.quransanctuary.app.data.model.VerseTexts
-import com.quransanctuary.app.data.share.ShareVideoGenerator
 import com.quransanctuary.app.ui.AppViewModel
 import com.quransanctuary.app.ui.components.AmbientBackground
-import com.quransanctuary.app.ui.components.AyahShareSheet
 import com.quransanctuary.app.ui.components.GoldButton
 import com.quransanctuary.app.ui.components.PlayerBarOrNothing
 import com.quransanctuary.app.ui.navigation.Route
@@ -100,11 +91,6 @@ fun ReaderScreen(vm: AppViewModel, nav: NavController, surahId: Int) {
     val fontScale by vm.arabicFontScale.collectAsState()
     val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
-    var shareRequest by remember(surahId) {
-        mutableStateOf<ShareVideoGenerator.Request?>(null)
-    }
-    var selectionMode by remember(surahId) { mutableStateOf(false) }
-    var selectedAyahs by remember(surahId) { mutableStateOf<Set<Int>>(emptySet()) }
 
     val surah = remember(surahId) { repo.getSurah(surahId) }
     var verses by remember(surahId) { mutableStateOf<VerseTexts?>(null) }
@@ -242,46 +228,6 @@ fun ReaderScreen(vm: AppViewModel, nav: NavController, surahId: Int) {
                     },
                     actions = {
                         val rec = repo.getRecitation(player.reciterId, surahId)
-                        if (selectionMode) {
-                            IconButton(
-                                onClick = {
-                                    val sorted = selectedAyahs.sorted()
-                                    if (sorted.isNotEmpty()) {
-                                        (repo.getReciter(player.reciterId) ?: repo.reciters.firstOrNull())?.let { reciter ->
-                                            val vs = verses
-                                            val translations = sorted.mapNotNull { idx ->
-                                                vs?.translationAz?.getOrNull(idx)
-                                            }.joinToString("\n\n")
-                                            shareRequest = ShareVideoGenerator.Request(
-                                                surah = surah,
-                                                reciter = reciter,
-                                                ambient = repo.getAmbient(player.ambientId),
-                                                ayahIndices = sorted,
-                                                arabic = "",
-                                                transliteration = "",
-                                                translation = translations,
-                                                ambientVolume = engine.state.value.ambientVolume
-                                            )
-                                        }
-                                    }
-                                    selectionMode = false
-                                    selectedAyahs = emptySet()
-                                },
-                                enabled = selectedAyahs.isNotEmpty()
-                            ) {
-                                Icon(Icons.Filled.Share, contentDescription = "Video yarat", tint = Gold)
-                            }
-                            IconButton(onClick = {
-                                selectionMode = false
-                                selectedAyahs = emptySet()
-                            }) {
-                                Icon(Icons.Filled.Close, contentDescription = "Ləğv et", tint = GoldSoft)
-                            }
-                        } else {
-                            IconButton(onClick = { selectionMode = true }) {
-                                Icon(Icons.Filled.Share, contentDescription = "Çoxlu ayə seç", tint = GoldSoft)
-                            }
-                        }
                         IconButton(onClick = {
                             if (rec != null) {
                                 container.downloader.enqueue(
@@ -430,12 +376,11 @@ fun ReaderScreen(vm: AppViewModel, nav: NavController, surahId: Int) {
                 itemsIndexed(v.arabic, key = { index, _ -> index }) { index, arabic ->
                     val active = isCurrentSurah && player.quranPlaying && player.activeAyah == index &&
                         player.timings != null
-                    val displayArabic = if (QuranRepository.showsBismillah(surahId) && index == 0) {
-                        QuranRepository.stripBismillahPrefix(arabic)
-                    } else arabic
                     VerseCard(
                         ayahNumber = index + 1,
-                        arabic = displayArabic,
+                        arabic = if (QuranRepository.showsBismillah(surahId) && index == 0) {
+                            QuranRepository.stripBismillahPrefix(arabic)
+                        } else arabic,
                         transliteration = v.transliteration.getOrNull(index) ?: "",
                         translation = v.translationAz.getOrNull(index) ?: "",
                         showArabic = showArabic,
@@ -443,110 +388,9 @@ fun ReaderScreen(vm: AppViewModel, nav: NavController, surahId: Int) {
                         active = active,
                         bookmarked = bookmarkedAyahs.contains(index + 1),
                         fontScale = fontScale,
-                        selectionMode = selectionMode,
-                        selected = selectedAyahs.contains(index),
-                        onToggleSelection = {
-                            selectedAyahs = if (selectedAyahs.contains(index)) {
-                                selectedAyahs - index
-                            } else {
-                                selectedAyahs + index
-                            }
-                        },
-                        onTap = {
-                            if (selectionMode) {
-                                selectedAyahs = if (selectedAyahs.contains(index)) {
-                                    selectedAyahs - index
-                                } else {
-                                    selectedAyahs + index
-                                }
-                            } else {
-                                tapVerse(index)
-                            }
-                        },
-                        onToggleBookmark = { toggleBookmark(index + 1) },
-                        onShare = {
-                            if (selectionMode) {
-                                selectedAyahs = if (selectedAyahs.contains(index)) {
-                                    selectedAyahs - index
-                                } else {
-                                    selectedAyahs + index
-                                }
-                            } else {
-                                (repo.getReciter(player.reciterId) ?: repo.reciters.firstOrNull())?.let { reciter ->
-                                    shareRequest = ShareVideoGenerator.Request(
-                                        surah = surah,
-                                        reciter = reciter,
-                                        ambient = repo.getAmbient(player.ambientId),
-                                        ayahIndices = listOf(index),
-                                        arabic = displayArabic,
-                                        transliteration = v.transliteration.getOrNull(index) ?: "",
-                                        translation = v.translationAz.getOrNull(index) ?: "",
-                                        ambientVolume = engine.state.value.ambientVolume
-                                    )
-                                }
-                            }
-                        }
+                        onTap = { tapVerse(index) },
+                        onToggleBookmark = { toggleBookmark(index + 1) }
                     )
-                }
-                if (selectionMode) {
-                    item {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                "Seçilmiş ayə: ${selectedAyahs.size}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = GoldSoft
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                OutlinedButton(
-                                    onClick = {
-                                        selectionMode = false
-                                        selectedAyahs = emptySet()
-                                    },
-                                    border = BorderStroke(1.dp, Gold.copy(alpha = 0.55f))
-                                ) {
-                                    Text("Ləğv et", color = GoldSoft)
-                                }
-                                Button(
-                                    onClick = {
-                                        val sorted = selectedAyahs.sorted()
-                                        if (sorted.isNotEmpty()) {
-                                            (repo.getReciter(player.reciterId) ?: repo.reciters.firstOrNull())?.let { reciter ->
-                                                val translations = sorted.mapNotNull { idx ->
-                                                    v.translationAz.getOrNull(idx)
-                                                }.joinToString("\n\n")
-                                                shareRequest = ShareVideoGenerator.Request(
-                                                    surah = surah,
-                                                    reciter = reciter,
-                                                    ambient = repo.getAmbient(player.ambientId),
-                                                    ayahIndices = sorted,
-                                                    arabic = "",
-                                                    transliteration = "",
-                                                    translation = translations,
-                                                    ambientVolume = engine.state.value.ambientVolume
-                                                )
-                                            }
-                                        }
-                                        selectionMode = false
-                                        selectedAyahs = emptySet()
-                                    },
-                                    enabled = selectedAyahs.isNotEmpty(),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Gold,
-                                        contentColor = Color.Black
-                                    )
-                                ) {
-                                    Text("Video yarat", fontWeight = FontWeight.SemiBold)
-                                }
-                            }
-                            Spacer(Modifier.height(8.dp))
-                        }
-                    }
                 }
                 item {
                     Spacer(Modifier.height(8.dp))
@@ -566,15 +410,6 @@ fun ReaderScreen(vm: AppViewModel, nav: NavController, surahId: Int) {
                 }
             }
         }
-    }
-
-    shareRequest?.let { request ->
-        AyahShareSheet(
-            request = request,
-            generator = container.shareVideo,
-            engine = engine,
-            onDismiss = { shareRequest = null }
-        )
     }
 }
 
@@ -656,12 +491,8 @@ private fun VerseCard(
     active: Boolean,
     bookmarked: Boolean,
     fontScale: Float,
-    selectionMode: Boolean = false,
-    selected: Boolean = false,
-    onToggleSelection: () -> Unit = {},
     onTap: () -> Unit,
-    onToggleBookmark: () -> Unit,
-    onShare: () -> Unit
+    onToggleBookmark: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(18.dp),
@@ -673,8 +504,7 @@ private fun VerseCard(
         ),
         border = BorderStroke(
             1.dp,
-            if (selectionMode && selected) Gold
-            else if (active) Gold.copy(alpha = 0.65f)
+            if (active) Gold.copy(alpha = 0.65f)
             else Color.White.copy(alpha = 0.14f)
         ),
         modifier = Modifier.fillMaxWidth()
@@ -700,14 +530,6 @@ private fun VerseCard(
                     )
                 }
                 Spacer(Modifier.weight(1f))
-                IconButton(onClick = onShare, modifier = Modifier.size(32.dp)) {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = "Paylaş",
-                        tint = GoldSoft,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
                 IconButton(onClick = onToggleBookmark, modifier = Modifier.size(32.dp)) {
                     Icon(
                         imageVector = if (bookmarked) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,

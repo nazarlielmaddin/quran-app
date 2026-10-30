@@ -76,7 +76,7 @@ import com.quransanctuary.app.ui.theme.GoldSoft
 // soft gold glows. Theme-aware (adapts to dark / light), no image assets.
 // ---------------------------------------------------------------------------
 
-/** Soft translucent card: gentle vertical wash with a barely-there edge. */
+/** Translucent card with a hairline border — the base glass surface. */
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
@@ -90,23 +90,15 @@ fun GlassCard(
             if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
         ),
         shape = shape,
-        color = Color.Transparent,
-        border = null,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.55f),
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)
+        ),
         tonalElevation = 0.dp,
         shadowElevation = 0.dp
     ) {
-        Box(
-            Modifier
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.60f),
-                            MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.84f)
-                        )
-                    )
-                )
-                .padding(contentPadding)
-        ) { content() }
+        Box(Modifier.padding(contentPadding)) { content() }
     }
 }
 
@@ -633,8 +625,8 @@ fun GlassSearchField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.55f),
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.55f),
-            focusedBorderColor = Gold.copy(alpha = 0.45f),
-            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.28f),
+            focusedBorderColor = Gold.copy(alpha = 0.6f),
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
             cursorColor = Gold
         ),
         modifier = modifier.fillMaxWidth()

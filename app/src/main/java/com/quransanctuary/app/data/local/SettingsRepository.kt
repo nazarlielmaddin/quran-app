@@ -7,13 +7,11 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.quransanctuary.app.data.model.AppLocale
 import com.quransanctuary.app.data.model.DisplayMode
 import com.quransanctuary.app.data.model.RepeatMode
 import com.quransanctuary.app.data.model.ThemeMode
-import com.quransanctuary.app.data.prayer.DefaultPrayerCity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -39,12 +37,6 @@ class SettingsRepository(private val context: Context) {
         val DISPLAY_MODE = stringPreferencesKey("displayMode")
         val ARABIC_FONT_SCALE = floatPreferencesKey("arabicFontScale")
         val SLEEP_MINUTES = intPreferencesKey("sleepMinutes")
-        val FAVORITE_RECITERS = stringSetPreferencesKey("favoriteReciters")
-        val PRAYER_CITY = stringPreferencesKey("prayerCityId")
-        val PRAYER_LABEL = stringPreferencesKey("prayerCityLabel")
-        val PRAYER_LAT = stringPreferencesKey("prayerLatitude")
-        val PRAYER_LON = stringPreferencesKey("prayerLongitude")
-        val PRAYER_ZONE = stringPreferencesKey("prayerTimezone")
     }
 
     val locale: Flow<AppLocale> = context.settingsStore.data.map { AppLocale.from(it[Keys.LOCALE]) }
@@ -62,23 +54,6 @@ class SettingsRepository(private val context: Context) {
     val displayMode: Flow<DisplayMode> = context.settingsStore.data.map { DisplayMode.from(it[Keys.DISPLAY_MODE]) }
     val arabicFontScale: Flow<Float> = context.settingsStore.data.map { it[Keys.ARABIC_FONT_SCALE] ?: 1f }
 
-    /** Reciters explicitly saved by the user (Home "Seçilmiş hafizlər"). */
-    val favoriteReciters: Flow<Set<String>> =
-        context.settingsStore.data.map { it[Keys.FAVORITE_RECITERS] ?: emptySet() }
-
-    val prayerCityId: Flow<String> =
-        context.settingsStore.data.map { it[Keys.PRAYER_CITY] ?: DefaultPrayerCity.id }
-    val prayerCityLabel: Flow<String> =
-        context.settingsStore.data.map { it[Keys.PRAYER_LABEL] ?: DefaultPrayerCity.nameAz }
-    val prayerLatitude: Flow<Double> = context.settingsStore.data.map {
-        it[Keys.PRAYER_LAT]?.toDoubleOrNull() ?: DefaultPrayerCity.latitude
-    }
-    val prayerLongitude: Flow<Double> = context.settingsStore.data.map {
-        it[Keys.PRAYER_LON]?.toDoubleOrNull() ?: DefaultPrayerCity.longitude
-    }
-    val prayerZoneId: Flow<String> =
-        context.settingsStore.data.map { it[Keys.PRAYER_ZONE] ?: DefaultPrayerCity.zoneId }
-
     suspend fun setLocale(v: AppLocale) = edit { it[Keys.LOCALE] = v.id }
     suspend fun setTheme(v: ThemeMode) = edit { it[Keys.THEME] = v.id }
     suspend fun setReciter(v: String) = edit { it[Keys.RECITER] = v }
@@ -92,27 +67,6 @@ class SettingsRepository(private val context: Context) {
     suspend fun setQuranEnabled(v: Boolean) = edit { it[Keys.QURAN_ENABLED] = v }
     suspend fun setDisplayMode(v: DisplayMode) = edit { it[Keys.DISPLAY_MODE] = v.id }
     suspend fun setArabicFontScale(v: Float) = edit { it[Keys.ARABIC_FONT_SCALE] = v.coerceIn(0.8f, 1.6f) }
-
-    suspend fun toggleFavoriteReciter(id: String) = edit { prefs ->
-        val current = prefs[Keys.FAVORITE_RECITERS] ?: emptySet()
-        prefs[Keys.FAVORITE_RECITERS] =
-            if (id in current) current - id else current + id
-    }
-
-    /** Persist a manual city or a device-location fix ("gps"). */
-    suspend fun setPrayerLocation(
-        id: String,
-        label: String,
-        latitude: Double,
-        longitude: Double,
-        zoneId: String
-    ) = edit { prefs ->
-        prefs[Keys.PRAYER_CITY] = id
-        prefs[Keys.PRAYER_LABEL] = label
-        prefs[Keys.PRAYER_LAT] = latitude.toString()
-        prefs[Keys.PRAYER_LON] = longitude.toString()
-        prefs[Keys.PRAYER_ZONE] = zoneId
-    }
 
     fun progressKey(surah: Int) = longPreferencesKey("progress_ms_$surah")
     fun progressAyahKey(surah: Int) = intPreferencesKey("progress_ayah_$surah")

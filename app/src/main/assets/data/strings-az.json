@@ -1,8 +1,8 @@
 {
- "brand": "Azanify",
- "brandSub": "Azanify",
+ "brand": "Quran ziyarətgahı",
+ "brandSub": "Quran ziyarətgahı",
  "nav": {
-  "reciters": "Hafizlər",
+  "reciters": "Qiraətçilər",
   "surahs": "Surələr",
   "atmosphere": "Atmosfer",
   "nowPlaying": "İndi Oxunur"
@@ -10,7 +10,7 @@
  "hero": {
   "titleA": "Quran",
   "titleB": "Hüzur və Diqqət",
-  "subtitle": "Öz hafizinizi seçin, atmosferinizi seçin və rahatlıqla qulaq asın.",
+  "subtitle": "Öz oxucunuzu seçin, atmosferinizi seçin və rahatlıqla qulaq asın.",
   "cta": "Dinləməyə Başlayın",
   "secondary": "Surələri araşdırın",
   "anfalAyah": "Həqiqi möminlər yalnız Allahı zikr etməklə qəlbləri titrəyən, ayələri onlara oxunduqda imanları artan və yalnız Rəbbinə təvəkkül edənlərdir.",
@@ -18,11 +18,11 @@
   "scroll": "Sürüşdürün"
  },
  "reciters": {
-  "title": "Öz hafizinizi seçin",
+  "title": "Öz oxucunuzu seçin",
   "subtitle": "On usta səs — Hərameyn'dən qəlbinizə qədər.",
   "subtitleCount": "{count} usta səs — seçmək üçün toxunun, dinləmək üçün oxut düyməsini basın",
   "listen": "Dinlə",
-  "select": "Hafiz seç"
+  "select": "Oxucu seç"
  },
  "surahs": {
   "title": "Bir surə seçin",
@@ -108,7 +108,7 @@
  },
  "footer": {
   "madeWith": "Hüzur içində dinləmə üçün hazırlanıb",
-  "tagline": "Quran, Namaz və Hüzur"
+  "tagline": "Quran. Hüzur. Diqqət."
  },
  "developedBy": "Hazırlayan"
 }

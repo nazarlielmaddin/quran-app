@@ -15,9 +15,5 @@ sealed interface Route {
     @Serializable
     data object Settings : Route
     @Serializable
-    data object Reciters : Route
-    @Serializable
-    data object Surahs : Route
-    @Serializable
     data class ReciterDetail(val id: String) : Route
 }

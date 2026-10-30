@@ -13,17 +13,8 @@ val AmiriFamily = FontFamily(
     Font(R.font.amiri_bold, FontWeight.Bold)
 )
 
-val DisplayFamily = FontFamily(
-    Font(R.font.inter_display_regular, FontWeight.Normal),
-    Font(R.font.inter_display_medium, FontWeight.Medium),
-    Font(R.font.inter_display_semibold, FontWeight.SemiBold)
-)
-val BodyFamily = FontFamily(
-    Font(R.font.inter_regular, FontWeight.Normal),
-    Font(R.font.inter_medium, FontWeight.Medium),
-    Font(R.font.inter_semibold, FontWeight.SemiBold),
-    Font(R.font.inter_bold, FontWeight.Bold)
-)
+val DisplayFamily = FontFamily.Serif
+val BodyFamily = FontFamily.Default
 
 val AppTypography = Typography(
     displayLarge = TextStyle(fontFamily = DisplayFamily, fontWeight = FontWeight.Medium, fontSize = 44.sp, lineHeight = 52.sp),

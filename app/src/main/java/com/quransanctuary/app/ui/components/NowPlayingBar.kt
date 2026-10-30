@@ -52,7 +52,6 @@ import com.quransanctuary.app.ui.AppViewModel
 import com.quransanctuary.app.ui.navigation.Route
 import com.quransanctuary.app.ui.strings.LocalStrings
 import com.quransanctuary.app.ui.theme.Gold
-import com.quransanctuary.app.ui.theme.Ink
 
 /**
  * The bar appears only once recitation actually starts (playing or paused
@@ -71,8 +70,7 @@ fun PlayerUiState.hasActivePlayback(): Boolean =
 fun PlayerBarOrNothing(
     vm: AppViewModel,
     nav: NavController,
-    modifier: Modifier = Modifier,
-    navigationBarsPadding: Boolean = true
+    modifier: Modifier = Modifier
 ) {
     val player by vm.player.collectAsState()
     if (!player.hasActivePlayback()) return
@@ -89,8 +87,7 @@ fun PlayerBarOrNothing(
         onPrev = { engine.prevSurah() },
         onSeek = { engine.seekTo(it) },
         onOpenPlayer = { nav.navigate(Route.Player) },
-        modifier = modifier,
-        navigationBarsPadding = navigationBarsPadding
+        modifier = modifier
     )
 }
 
@@ -122,17 +119,13 @@ fun SlimPlayerBar(
     onPrev: () -> Unit,
     onSeek: (Long) -> Unit,
     onOpenPlayer: () -> Unit,
-    modifier: Modifier = Modifier,
-    navigationBarsPadding: Boolean = true
+    modifier: Modifier = Modifier
 ) {
     val strings = LocalStrings.current
     GlassCard(
         modifier = modifier
             .fillMaxWidth()
-            .then(
-                if (navigationBarsPadding) Modifier.navigationBarsPadding()
-                else Modifier
-            )
+            .navigationBarsPadding()
             .padding(horizontal = 12.dp, vertical = 8.dp),
         shape = RoundedCornerShape(24.dp),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 10.dp)
@@ -199,7 +192,7 @@ fun SlimPlayerBar(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                        .background(Gold)
+                        .background(Color.White)
                         .clickable(onClick = onToggle),
                     contentAlignment = Alignment.Center
                 ) {
@@ -207,13 +200,13 @@ fun SlimPlayerBar(
                         CircularProgressIndicator(
                             modifier = Modifier.size(22.dp),
                             strokeWidth = 2.5.dp,
-                            color = Ink
+                            color = Color.Black
                         )
                     } else {
                         Icon(
                             if (state.quranPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                             contentDescription = if (state.quranPlaying) strings.player.pause else strings.player.play,
-                            tint = Ink,
+                            tint = Color.Black,
                             modifier = Modifier.size(27.dp)
                         )
                     }

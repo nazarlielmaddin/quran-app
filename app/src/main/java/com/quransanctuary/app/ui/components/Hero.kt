@@ -148,7 +148,8 @@ fun HeroSection(
                 Text(
                     text = strings.hero.scroll.uppercase(),
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    letterSpacing = androidx.compose.ui.unit.TextUnit(3f, androidx.compose.ui.unit.TextUnitType.Sp)
                 )
                 BounceArrow()
             }

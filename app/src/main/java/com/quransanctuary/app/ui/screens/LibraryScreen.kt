@@ -47,7 +47,6 @@ import com.quransanctuary.app.data.model.AppLocale
 import com.quransanctuary.app.domain.formatTime
 import com.quransanctuary.app.ui.AppViewModel
 import com.quransanctuary.app.ui.components.GlassCard
-import com.quransanctuary.app.ui.components.PlayerBarOrNothing
 import com.quransanctuary.app.ui.components.SanctuaryScaffold
 import com.quransanctuary.app.ui.components.SanctuaryTopBar
 import com.quransanctuary.app.ui.navigation.Route
@@ -102,13 +101,9 @@ fun LibraryScreen(vm: AppViewModel, nav: NavController) {
         ambient = repo.getAmbient(player.ambientId),
         homeLabel = homeTabLabel, readerLabel = readerTabLabel, libraryLabel = libraryTabLabel, settingsLabel = settingsTabLabel,
         topBar = { SanctuaryTopBar(onBrandClick = {}) },
-        bottomBar = {
-            PlayerBarOrNothing(
-                vm = vm,
-                nav = nav,
-                navigationBarsPadding = false
-            )
-        }
+        // Player stays out of this screen: navigation panel only, so the
+        // mini player can never overlap the bottom nav.
+        bottomBar = {}
     ) { padding ->
         Column(
             modifier = Modifier
