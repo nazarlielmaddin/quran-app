@@ -26,7 +26,9 @@ Kotlin core in `ios/shared` is a dependency-free port of
 | 18 Azerbaijani cities, persisted selection | ✅ |
 | SwiftUI shell: home + next prayer + countdown, 114-surah browser, settings | ✅ |
 | CI: build → simulator → screenshot artifact | ✅ |
-| Reader, audio (AVPlayer), downloads, azan notifications, share video | ⛔ next phases |
+| Reader with timed verse highlighting and generated video sharing | ✅ |
+| Quran + ambient audio mixing with independent volume controls and lock-screen playback | ✅ |
+| Offline audio downloads and custom azan notifications | ✅ |
 
 ## Run it
 
@@ -51,6 +53,12 @@ cd ../iosApp
 brew install xcodegen && xcodegen generate
 open Azanify.xcodeproj
 ```
+
+The simulator workflow validates compilation and all five tab launches. Audio
+continuation in the background/lock screen and notification delivery require a
+real iOS device. The app bundles `azan_notification.caf`, which is a short CAF
+notification asset and therefore stays within Apple's 30-second notification
+sound limit.
 
 ## Store submission (later)
 
