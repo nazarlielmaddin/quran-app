@@ -1,0 +1,243 @@
+[
+ {
+  "id": "rain",
+  "name": "Rain",
+  "nameAz": "Yağış",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#1e3a5f",
+   "#0b1526"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2024/10/30/audio_42e6870f29.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2024/07/29/223788_medium.mp4",
+  "source": "Pixabay — atmospheric rain over leaves",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Rain_drops_on_window_01_ies.jpg/500px-Rain_drops_on_window_01_ies.jpg",
+  "imageSource": "Wikimedia Commons — Rain drops on window"
+ },
+ {
+  "id": "heavyRain",
+  "name": "Heavy Rain",
+  "nameAz": "Güclü Yağış",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#2b3a4a",
+   "#0d1117"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2026/08/12/audio_ef5d4fb704.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2023/09/06/179363-861795878_small.mp4",
+  "source": "Pixabay — heavy rainstorm on grass",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Joshua_Tree_Park_approaching_thunderstorm_02_2013.jpg/500px-Joshua_Tree_Park_approaching_thunderstorm_02_2013.jpg",
+  "imageSource": "Wikimedia Commons — Approaching thunderstorm"
+ },
+ {
+  "id": "thunder",
+  "name": "Thunder",
+  "nameAz": "Göy gurultusu",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#3d2f5c",
+   "#12101c"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/07/16/audio_a368a84757.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2022/07/23/125192-732837222_small.mp4",
+  "source": "Pixabay — storm clouds with lightning",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_NOAA.jpg/500px-Lightning_NOAA.jpg",
+  "imageSource": "Wikimedia Commons — Lightning (NOAA)"
+ },
+ {
+  "id": "wind",
+  "name": "Wind",
+  "nameAz": "Külək",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#4a5a6a",
+   "#141821"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/12/28/audio_51b7de1a9f.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2023/04/11/158384-816637349_medium.mp4",
+  "source": "Pixabay — clouds moving in the wind",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Sky_Clouds_and_Atmosphere.jpg/500px-Sky_Clouds_and_Atmosphere.jpg",
+  "imageSource": "Wikimedia Commons — Sky, clouds and atmosphere"
+ },
+ {
+  "id": "ocean",
+  "name": "Ocean",
+  "nameAz": "Okean",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#1c4e5f",
+   "#08141b"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2024/10/12/audio_7dd52a2e33.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2024/03/21/205011-926015732_medium.mp4",
+  "source": "Pixabay — ocean waves at night",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Big_wave_breaking_in_Santa_Cruz.jpg/500px-Big_wave_breaking_in_Santa_Cruz.jpg",
+  "imageSource": "Wikimedia Commons — Big wave breaking"
+ },
+ {
+  "id": "river",
+  "name": "River",
+  "nameAz": "Çay",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#2f5d50",
+   "#0c1a16"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/03/01/audio_def86f49ba.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2023/01/18/146993-790648696_small.mp4",
+  "source": "Pixabay — creek in the rain",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Creek-water-pool-stream_-_West_Virginia_-_ForestWander.jpg/500px-Creek-water-pool-stream_-_West_Virginia_-_ForestWander.jpg",
+  "imageSource": "Wikimedia Commons — Creek water pool stream"
+ },
+ {
+  "id": "water",
+  "name": "Water",
+  "nameAz": "Su",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#3b6b8f",
+   "#0d1b26"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/11/30/audio_e877dc8fbf.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2020/10/26/53385-474597353_small.mp4",
+  "source": "Pixabay — mountain stream",
+  "volume": 0.1,
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Mountain_Stream_MET_DT1544.jpg/500px-Mountain_Stream_MET_DT1544.jpg",
+  "imageSource": "Wikimedia Commons — Mountain stream"
+ },
+ {
+  "id": "forest",
+  "name": "Forest",
+  "nameAz": "Meşə",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#2c4a2e",
+   "#0a120b"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/02/03/audio_7599bcb342.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2022/07/17/124412-730817618_small.mp4",
+  "source": "Pixabay — rainy forest",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Duke_Forest_misty_morning_h.jpg/500px-Duke_Forest_misty_morning_h.jpg",
+  "imageSource": "Wikimedia Commons — Misty forest morning"
+ },
+ {
+  "id": "birds",
+  "name": "Birds",
+  "nameAz": "Quşlar",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#5f5a3d",
+   "#141410"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2024/06/15/audio_7ab24f6957.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2022/10/20/135727-764361705_medium.mp4",
+  "source": "Pixabay — birds in flight",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/Flying_birds_in_the_sky.jpg/500px-Flying_birds_in_the_sky.jpg",
+  "imageSource": "Wikimedia Commons — Flying birds"
+ },
+ {
+  "id": "night",
+  "name": "Night",
+  "nameAz": "Gecə",
+  "category": "nature",
+  "categoryAz": "Təbiət",
+  "gradient": [
+   "#1a1e3d",
+   "#06060f"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2022/02/07/audio_51b5acd355.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2025/08/08/296296_small.mp4",
+  "source": "Pixabay — golden full moon",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Full_Moon_At_A_Clear_Night_Sky_%2894791911%29.jpeg/500px-Full_Moon_At_A_Clear_Night_Sky_%2894791911%29.jpeg",
+  "imageSource": "Wikimedia Commons — Full moon at night"
+ },
+ {
+  "id": "fireplace",
+  "name": "Fireplace",
+  "nameAz": "Şömine",
+  "category": "cozy",
+  "categoryAz": "Rahat",
+  "gradient": [
+   "#8a4b1f",
+   "#1a0e05"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2021/08/04/audio_d412a79df9.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2022/10/24/136334-764387851_large.mp4",
+  "source": "Pixabay — dark room fireplace",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Fireplace-RM.jpg/500px-Fireplace-RM.jpg",
+  "imageSource": "Wikimedia Commons — Fireplace"
+ },
+ {
+  "id": "cat",
+  "name": "Real Cat",
+  "nameAz": "Pişik",
+  "category": "cozy",
+  "categoryAz": "Rahat",
+  "gradient": [
+   "#6b4f3a",
+   "#170f0a"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2022/03/15/audio_77048d6dc3.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2020/08/02/46226-447422835_small.mp4",
+  "source": "Pixabay — real white cat by the window",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Felis_catus-cat_on_snow.jpg/500px-Felis_catus-cat_on_snow.jpg",
+  "imageSource": "Wikimedia Commons — White cat"
+ },
+ {
+  "id": "room",
+  "name": "Soft Room Ambience",
+  "nameAz": "Sakit Otaq",
+  "category": "cozy",
+  "categoryAz": "Rahat",
+  "gradient": [
+   "#4a3f3a",
+   "#14100d"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2026/08/04/audio_92ce9e946a.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2023/06/08/166272-834580690_large.mp4",
+  "source": "Pixabay — cozy room with candles",
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b6/EFTA00002839_-_Cozy_room_with_blue_beams_and_a_wicker_chair_featuring_a_glass-top_table_with_candles_and_a_colorful_rug_near_a_window_overlooking_a_stone_wall.jpg",
+  "imageSource": "Wikimedia Commons — Cozy room with candles"
+ },
+ {
+  "id": "brownNoise",
+  "name": "Brown Noise",
+  "nameAz": "Səs-küy",
+  "category": "focus",
+  "categoryAz": "Diqqət",
+  "gradient": [
+   "#5a4a3a",
+   "#140f0a"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/02/11/audio_076c4755e8.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2020/05/05/38137-415263669_large.mp4",
+  "source": "Pixabay — dark mist",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Night_Mist_%288151680749%29.jpg/500px-Night_Mist_%288151680749%29.jpg",
+  "imageSource": "Wikimedia Commons — Night mist"
+ },
+ {
+  "id": "deepNoise",
+  "name": "Deep Noise",
+  "nameAz": "Dərin səs-küy",
+  "category": "focus",
+  "categoryAz": "Diqqət",
+  "gradient": [
+   "#2f3a4a",
+   "#080b10"
+  ],
+  "audioUrl": "https://cdn.pixabay.com/audio/2025/01/28/audio_edc77fca75.mp3",
+  "videoUrl": "https://cdn.pixabay.com/video/2017/01/07/7102-198553608_large.mp4",
+  "source": "Pixabay — fog rolling",
+  "imageUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Fog_rolling_over_Arched_Rock.jpg/500px-Fog_rolling_over_Arched_Rock.jpg",
+  "imageSource": "Wikimedia Commons — Fog rolling"
+ }
+]

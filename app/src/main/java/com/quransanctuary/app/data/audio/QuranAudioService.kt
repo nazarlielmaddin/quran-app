@@ -226,11 +226,11 @@ class QuranAudioService : MediaSessionService() {
                     val surah = runCatching { repo.getSurah(s.surahId) }.getOrNull()
                     val reciter = runCatching { repo.getReciter(s.reciterId) }.getOrNull()
                     val title = if (surah != null) "${surah.number}. ${surah.transliteratedName}"
-                    else "Quran Sanctuary"
+                    else "Azanify"
                     val sub = listOfNotNull(
                         reciter?.localizedName(loc.id),
                         if (s.quranLoading && !s.quranPlaying) loadingWord(loc.id) else null
-                    ).joinToString(" · ").ifEmpty { "Quran Sanctuary" }
+                    ).joinToString(" · ").ifEmpty { "Azanify" }
                     NotifData(title, sub, s.quranPlaying, reciter?.let { "reciters/${it.assetFileName()}" })
                 }.distinctUntilChanged().collect { data ->
                     // Ownership rule: while Media3 owns active playback it posts
@@ -252,8 +252,8 @@ class QuranAudioService : MediaSessionService() {
         val s = runCatching { engine.state.value }.getOrNull() ?: return
         val surah = runCatching { repo.getSurah(s.surahId) }.getOrNull()
         val reciter = runCatching { repo.getReciter(s.reciterId) }.getOrNull()
-        val title = if (surah != null) "${surah.number}. ${surah.transliteratedName}" else "Quran Sanctuary"
-        val sub = listOfNotNull(reciter?.localizedName("az")).joinToString(" · ").ifEmpty { "Quran Sanctuary" }
+        val title = if (surah != null) "${surah.number}. ${surah.transliteratedName}" else "Azanify"
+        val sub = listOfNotNull(reciter?.localizedName("az")).joinToString(" · ").ifEmpty { "Azanify" }
         runCatching {
             promoteToForeground(
                 NotifData(title, sub, s.quranPlaying, reciter?.let { "reciters/${it.assetFileName()}" })
@@ -300,7 +300,7 @@ class QuranAudioService : MediaSessionService() {
             }
         }
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(data?.title ?: "Quran Sanctuary")
+            .setContentTitle(data?.title ?: "Azanify")
             .setContentText(data?.subtitle ?: "Preparing recitation…")
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setOngoing(true)

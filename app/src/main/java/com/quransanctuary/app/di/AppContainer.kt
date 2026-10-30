@@ -8,6 +8,8 @@ import com.quransanctuary.app.data.local.AssetLoader
 import com.quransanctuary.app.data.local.LibraryDatabase
 import com.quransanctuary.app.data.local.QuranRepository
 import com.quransanctuary.app.data.local.SettingsRepository
+import com.quransanctuary.app.data.prayer.PrayerTimesRepository
+import com.quransanctuary.app.data.share.ShareVideoGenerator
 import com.quransanctuary.app.ui.components.AmbientVideoHolder
 import com.quransanctuary.app.ui.strings.StringsLoader
 
@@ -24,8 +26,10 @@ class AppContainer(context: Context) {
         "quran-library.db"
     ).build()
     val repository = QuranRepository(assetLoader)
+    val prayerTimes = PrayerTimesRepository(appContext)
     val downloader = SurahDownloader(appContext, database)
     val audioEngine = AudioEngine(appContext, repository, settings, database)
+    val shareVideo = ShareVideoGenerator(appContext, repository)
     // Shared ambient-video player: one instance for all screens, so navigation
     // never restarts the clip (see AmbientVideoHolder).
     val ambientVideo = AmbientVideoHolder(appContext)

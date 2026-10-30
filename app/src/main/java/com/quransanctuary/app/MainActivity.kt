@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,7 +30,9 @@ import com.quransanctuary.app.ui.screens.LibraryScreen
 import com.quransanctuary.app.ui.screens.PlayerScreen
 import com.quransanctuary.app.ui.screens.ReaderScreen
 import com.quransanctuary.app.ui.screens.ReciterDetailScreen
+import com.quransanctuary.app.ui.screens.RecitersScreen
 import com.quransanctuary.app.ui.screens.SettingsScreen
+import com.quransanctuary.app.ui.screens.SurahPickerScreen
 import com.quransanctuary.app.ui.strings.LocalStrings
 import com.quransanctuary.app.ui.theme.QuranSanctuaryTheme
 
@@ -56,7 +59,10 @@ class MainActivity : ComponentActivity() {
         val container: AppContainer = (application as QuranApp).container
         // Audio init touches disk (player cache); never let it crash app start.
         runCatching { container.audioEngine.initialize() }
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(0xFF07100C.toInt())
+        )
         setContent {
             val vm: AppViewModel = viewModel { AppViewModel(container) }
             val theme by vm.theme.collectAsState()
@@ -81,6 +87,12 @@ class MainActivity : ComponentActivity() {
                             }
                             composable<Route.Settings> {
                                 SettingsScreen(vm = vm, nav = nav)
+                            }
+                            composable<Route.Reciters> {
+                                RecitersScreen(vm = vm, nav = nav)
+                            }
+                            composable<Route.Surahs> {
+                                SurahPickerScreen(vm = vm, nav = nav)
                             }
                             composable<Route.ReciterDetail> { backStack ->
                                 val args = backStack.toRoute<Route.ReciterDetail>()

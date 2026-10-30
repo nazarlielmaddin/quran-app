@@ -32,8 +32,8 @@ android {
         applicationId = "com.quransanctuary.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 15
-        versionName = "1.17.1"
+        versionCode = 29
+        versionName = "1.21.1"
         vectorDrawables { useSupportLibrary = true }
     }
 
@@ -91,6 +91,8 @@ dependencies {
     implementation(libs.navigation.compose)
 
     implementation(libs.media3.exoplayer)
+    implementation(libs.media3.transformer)
+    implementation(libs.media3.effect)
     implementation(libs.media.compat)
     implementation(libs.media3.session)
 
