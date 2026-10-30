@@ -139,7 +139,7 @@ enum ShareVideoGenerator {
 
             let title = "\(surah.azerbaijaniName)  •  \(surah.englishName)"
             NSString(string: title).draw(
-                in: CGRect(x: inset + 36, y: 260, width: width - inset * 2 - 72, height: 70),
+                in: CGRect(x: inset + 36, y: 260, width: CGFloat(width) - inset * 2 - 72, height: 70),
                 withAttributes: [
                     .font: UIFont.systemFont(ofSize: 38, weight: .semibold),
                     .foregroundColor: UIColor(red: 0.95, green: 0.78, blue: 0.42, alpha: 1)
@@ -150,7 +150,7 @@ enum ShareVideoGenerator {
             for verse in verses.prefix(8) {
                 let arabic = NSString(string: verse.arabic)
                 arabic.draw(
-                    in: CGRect(x: inset + 42, y: y, width: width - inset * 2 - 84, height: 150),
+                    in: CGRect(x: inset + 42, y: y, width: CGFloat(width) - inset * 2 - 84, height: 150),
                     withAttributes: [
                         .font: UIFont.systemFont(ofSize: 48),
                         .foregroundColor: UIColor.white,
@@ -164,7 +164,7 @@ enum ShareVideoGenerator {
                 )
                 y += 180
                 NSString(string: verse.translation).draw(
-                    in: CGRect(x: inset + 42, y: y, width: width - inset * 2 - 84, height: 110),
+                    in: CGRect(x: inset + 42, y: y, width: CGFloat(width) - inset * 2 - 84, height: 110),
                     withAttributes: [
                         .font: UIFont.systemFont(ofSize: 28),
                         .foregroundColor: UIColor.white.withAlphaComponent(0.72),
@@ -181,7 +181,7 @@ enum ShareVideoGenerator {
             }
 
             NSString(string: "Azanify").draw(
-                in: CGRect(x: inset, y: height - 220, width: width - inset * 2, height: 60),
+                in: CGRect(x: inset, y: CGFloat(height) - 220, width: CGFloat(width) - inset * 2, height: 60),
                 withAttributes: [
                     .font: UIFont.systemFont(ofSize: 30, weight: .medium),
                     .foregroundColor: UIColor.white.withAlphaComponent(0.55)
