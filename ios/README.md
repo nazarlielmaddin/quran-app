@@ -74,3 +74,15 @@ sound limit.
 - Shared logic lives in `ios/shared/commonMain`. Do not duplicate prayer math in
   Swift.
 - `iosApp/Frameworks/` is generated; never commit it.
+
+## Free iPhone installation with AltStore/SideStore
+
+The repository includes a manual **iOS Free Sideload IPA** workflow. It builds an unsigned device IPA without Apple Developer signing:
+
+1. Open **Actions → iOS Free Sideload IPA → Run workflow** on GitHub.
+2. Download the `azanify-ios-unsigned-ipa` artifact from the completed run.
+3. Install **AltServer/AltStore** or **SideServer/SideStore** on a computer and connect the iPhone with the same Apple ID.
+4. Open AltStore/SideStore on the iPhone and choose **+ → Add IPA**, then select `Azanify-unsigned.ipa`.
+5. Trust the developer profile in **Settings → General → VPN & Device Management** if iOS asks.
+
+This uses the free Apple ID signing path, so the app normally needs to be refreshed every 7 days. The IPA is intentionally unsigned; AltStore/SideStore signs it with the user's own Apple ID. A direct Safari one-click install is not possible for native iOS apps without Apple signing/TestFlight.
